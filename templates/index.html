@@ -11,7 +11,6 @@
 </head>
 <body>
     <main class="main-wrap">
-
         {% comment %} Navbar {% endcomment %}
         <nav class="navbar">
             <a href="#home" class="nav-item">
@@ -39,15 +38,150 @@
         </div>
 
         <div id="about" class="about">
+            <div id="about" class="about">
+                <div class="about-container">
+                    
+                    <div class="about-header">
+                        <h2 class="about-title">About Me.</h2>
+                        <div class="about-line"></div>
+                    </div>
 
+                    <div class="about-content">
+                        
+                        <div class="about-left">
+                            <div class="slider-bg-accent"></div>
+                            <div class="photo-slider">
+                                {% comment %} Menggunakan hidden radio button untuk 'carousel' {% endcomment %}
+                                <input type="radio" name="photo-nav" id="foto1" checked>
+                                <input type="radio" name="photo-nav" id="foto2">
+
+                                <div class="slide-wrapper slide-1">
+                                    <img src="/static/img/qodri/foto1.jpeg" alt="Foto 1" class="profile-img">
+                                    <label for="foto2" class="nav-btn prev-btn"></label>
+                                    <label for="foto2" class="nav-btn next-btn"></label>
+                                </div>
+
+                                <div class="slide-wrapper slide-2">
+                                    <img src="/static/img/qodri/foto2.jpeg" alt="Foto 2" class="profile-img">
+                                    <label for="foto1" class="nav-btn prev-btn"></label>
+                                    <label for="foto1" class="nav-btn next-btn"></label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="about-right">
+                            
+                            <div class="info-card bio-card">
+                                <h3 class="card-title">Hello!</h3>
+                                <p class="bio-text">I'm Qodri/Bodrex. An Otaku CS Student that's interested on Game Dev and Data Science, though still has zero understanding about them.</p>
+                            </div>
+
+                            <div class="about-right-bottom">
+                                
+                                <div class="info-card interest-card">
+                                    <h3 class="card-title">I'm a fan of...</h3>
+                                    
+                                    {% comment %} Menggunakan hidden radio button untuk clickable changing image {% endcomment %}
+                                    <div class="interest-clicker">
+                                        <input type="radio" name="interest-nav" id="int1" checked>
+                                        <input type="radio" name="interest-nav" id="int2">
+                                        <input type="radio" name="interest-nav" id="int3">
+                                        <input type="radio" name="interest-nav" id="int4">
+                                        <input type="radio" name="interest-nav" id="int5">
+
+                                        <div class="interest-item int-1">
+                                            <label for="int2"><img src="/static/img/interest/anime.jpeg" alt="Animanga"></label>
+                                            <span class="interest-label">Animanga</span>
+                                        </div>
+                                        <div class="interest-item int-2">
+                                            <label for="int3"><img src="/static/img/interest/indiegame.png" alt="Indie Game"></label>
+                                            <span class="interest-label">Indie Game</span>
+                                        </div>
+                                        <div class="interest-item int-3">
+                                            <label for="int4"><img src="/static/img/interest/mochikei.jpg" alt="Mochizuki Kei's Artwork"></label>
+                                            <span class="interest-label">Mochizuki Kei's Artwork</span>
+                                        </div>
+                                        <div class="interest-item int-4">
+                                            <label for="int5"><img src="/static/img/interest/proseka.png" alt="Project Sekai"></label>
+                                            <span class="interest-label">Project Sekai</span>
+                                        </div>
+                                        <div class="interest-item int-5">
+                                            <label for="int1"><img src="/static/img/interest/shiho.png" alt="Hinomori Shiho"></label>
+                                            <span class="interest-label">Hinomori Shiho</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="education-col">
+                                    <div class="info-card edu-card">
+                                        <h3 class="card-title">Education</h3>
+                                        <div class="edu-clicker">
+                                            <input type="radio" name="edu-nav" id="edu1" checked>
+                                            <input type="radio" name="edu-nav" id="edu2">
+                                            <div class="edu-item item-1">
+                                                <label for="edu2">
+                                                    <img src="/static/img/education/jusat.png" alt="SMAN 71 JAKARTA">
+                                                    <span class="edu-label">SMAN 71 JAKARTA</span>
+                                                </label>
+                                            </div>
+                                            <div class="edu-item item-2">
+                                                <label for="edu1">
+                                                    <img src="/static/img/education/pacil.png" alt="Prodi Ilmu Komputer, Universitas Indonesia">
+                                                    <span class="edu-label">Prodi Ilmu Komputer, Universitas Indonesia</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="info-card extra-card">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="experience" class="experience">
 
         </div>
-        
-        <footer id="contact" class="footer-section">
 
+        <footer id="contact" class="footer-section">
+            <div class="footer-content">
+                <div class="contact-left">
+                    <h2 class="contact-title">Contact Me:</h2>
+                    <div class="contact-line"></div>
+                    
+                    <ul class="contact-list">
+                        <li class="contact-item">
+                            <img src="/static/img/contact/instagram.svg" alt="Instagram" class="contact-icons">
+                            <span class="contact-text">@qodrrexx</span>
+                        </li>
+                        <li class="contact-item">
+                            <img src="/static/img/contact/email.svg" alt="Email" class="contact-icons">
+                            <span class="contact-text">qodrizabi255@gmail.com</span>
+                        </li>
+                        <li class="contact-item">
+                            <img src="/static/img/contact/line.svg" alt="Line" class="contact-icons">
+                            <span class="contact-text">nightcetauri21(line)</span>
+                        </li>
+                        <li class="contact-item">
+                            <img src="/static/img/contact/linkedin.svg" alt="LinkedIn" class="contact-icons">
+                            <span class="contact-text">Muhammad Raihan Al Qadri Kusumaputra</span>
+                        </li>
+                        <li class="contact-item">
+                            <img src="/static/img/contact/github.svg" alt="GitHub" class="contact-icons">
+                            <span class="contact-text">ErzaProxy</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="copyright-right">
+                    <p class="copyright-text">&copy; 2026 Qodri. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+                </div>
+            </div>
         </footer>
     </main>
 </body>

@@ -10,6 +10,8 @@ AI Agent yang digunakan: Gemini Pro
 - Pembuatan glassy effect di navbar, untuk sticky navbarnya sendiri saya buat secara pribadi untuk struktur dari navigation barnya, namun saya pribadi masih belum tahu cara implement glassy effect di css html, sehingga saya menggunakan AI untuk membantu saya melakukan hal tersebut.
 - Mentranslasikan beberapa hal yang ada di figma saya, seperti ukuran, saran untuk implement pattern backgroundnya bagaimana (yang setelah itu saya coba implement dan sesuaikan tersendiri).
 - mempelajari @keyframe dan keyframe apa saja yang related untuk ide ide saya (seperti fading text dan juga jumping button) yang setelah itu saya sesuaikan lagi sesuai dengan keperluan saya
-v.0.1.2:
+v0.1.2:
 - Membantu dalam mencari cara untuk membuat sistem carousel dan juga clickable changing image tanpa menggunakan javascript. dimana AI menyarankan untuk menggunakan metode hidden radio button (display: none), dan juga memanipulasi elemen dengan selector
 - Debugging, pada awalnya terdapat bug pada layout site karena menggunakan fixed position untuk tiap bagiannya, sehingga section about me ada di height yang tidak seharusnya, sehingga AI menyarankan untuk menggunakan position relative dan memainkan marginnya
+v0.1.3:
+- Hanya untuk mengecek apakah dengan native html dan css posibble untuk membuat saat responsive nanti, card di carouselnya hanya ditampilkan 1 di mobile dan tablet, namun 2 desktop. supaya tidak perlu merombak terlalu banyak nanti saya ketika implement responsiveness

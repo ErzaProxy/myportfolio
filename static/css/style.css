@@ -15,6 +15,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* Main Wrapper */
 .main-wrap {
     width: 100%;
     min-height: 2723px; 
@@ -36,6 +37,7 @@ body {
     width: 100%;
 }
 
+/* Logika fading text */
 .fade-text {
     position: absolute;
     left: 50%;
@@ -69,6 +71,7 @@ body {
     100% { opacity: 0; }
 }
 
+/* Start Button */
 .start-btn {
     position: absolute;
     top: 600px;
@@ -98,6 +101,7 @@ body {
     100% { transform: translate(-50%, 0); }
 }
 
+/* Banner */
 .banner-container {
     width: 100%;
     position: relative;
@@ -109,6 +113,7 @@ body {
     display: block; 
 }
 
+/* Navbars */
 .navbar {
     position: fixed;
     top: 32px;
@@ -201,6 +206,7 @@ body {
     z-index: 10; 
 }
 
+/* About Me */
 .about-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -292,7 +298,7 @@ body {
     transform: translateY(-50%);
     width: 40px;
     height: 40px;
-    background-color: #67B854;
+    background-color: #FFFFFF;
     -webkit-mask-image: url('/static/img/button/left.svg');
     mask-image: url('/static/img/button/left.svg');
     -webkit-mask-size: contain;
@@ -305,7 +311,7 @@ body {
 }
 
 .nav-btn:hover {
-    background-color: #FFFFFF;
+    background-color: #BBDD22;
 }
 
 .prev-btn {
@@ -488,6 +494,168 @@ body {
     width: 328px;
     height: 150px;
 }
+
+/* Experience */
+.exp-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    padding-top: 20px;
+}
+
+.exp-header {
+    position: relative;
+    width: 650px;
+    margin: 0 auto 50px auto;
+    text-align: center;
+}
+
+.exp-title {
+    font-size: 40px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 10px;
+}
+
+.exp-line {
+    width: 456px;
+    height: 6px;
+    background: #FFFFFF;
+    margin: 0 auto;
+}
+
+.exp-slider-container {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.exp-slider-container input[type="radio"] {
+    display: none;
+}
+
+.exp-slider {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.exp-page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.exp-cards-wrapper {
+    display: flex;
+    gap: 46px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.exp-card {
+    width: 500px;
+    height: 234px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    padding-left: 55px;
+}
+
+.exp-card-accent {
+    position: absolute;
+    left: -0.2px;
+    top: 0;
+    width: 26px;
+    height: 100%;
+    background: #FCDFB3;
+    border-radius: 12px 0 0 12px;
+}
+
+.exp-logo-container {
+    position: relative;
+    width: 148px;
+    height: 148px;
+    margin-right: 25px;
+    flex-shrink: 0;
+}
+
+.exp-logo-frame {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #B8D85F;
+    border-radius: 45px;
+    box-shadow: 0px 0px 6px rgba(105, 84, 3, 0.4);
+    top: 0;
+    left: 0;
+}
+
+.exp-logo-container img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 45px;
+    top: 0;
+    left: 0;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+.exp-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 20px;
+    width: calc(100% - 173px);
+}
+
+.exp-org {
+    font-size: 24px;
+    font-weight: 700;
+    color: #BBDD22;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.exp-role {
+    font-size: 16px;
+    font-weight: 400;
+    color: #222122;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.exp-date {
+    font-size: 14px;
+    font-weight: 400;
+    color: #222122;
+}
+
+#exp-page1:checked ~ .exp-slider .exp-page.page-1,
+#exp-page2:checked ~ .exp-slider .exp-page.page-2,
+#exp-page3:checked ~ .exp-slider .exp-page.page-3 {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Footer */
 
 .footer-content {
     position: relative;

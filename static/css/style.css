@@ -1,3 +1,4 @@
+/* Reset & Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -29,6 +30,7 @@ body {
     position: relative;
 }
 
+/* Logika fading text */
 .welcome-text-container {
     position: absolute;
     top: 500px;
@@ -37,7 +39,6 @@ body {
     width: 100%;
 }
 
-/* Logika fading text */
 .fade-text {
     position: absolute;
     left: 50%;
@@ -51,27 +52,37 @@ body {
     animation: fadeCycle 9s infinite;
 }
 
-.text-1 { 
-    animation-delay: 0s; 
+.text-1 {
+    animation-delay: 0s;
 }
 
-.text-2 { 
-    animation-delay: 3s; 
+.text-2 {
+    animation-delay: 3s;
 }
 
-.text-3 { 
-    animation-delay: 6s; 
+.text-3 {
+    animation-delay: 6s;
 }
 
 @keyframes fadeCycle {
-    0% { opacity: 0; }
-    5% { opacity: 1; }
-    28% { opacity: 1; }
-    33.33% { opacity: 0; }
-    100% { opacity: 0; }
+    0% {
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+    28% {
+        opacity: 1;
+    }
+    33.33% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
-/* Start Button */
+/* Start button */
 .start-btn {
     position: absolute;
     top: 600px;
@@ -96,12 +107,18 @@ body {
 }
 
 @keyframes jumpOnce {
-    0% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, -15px); }
-    100% { transform: translate(-50%, 0); }
+    0% {
+        transform: translate(-50%, 0);
+    }
+    50% {
+        transform: translate(-50%, -15px);
+    }
+    100% {
+        transform: translate(-50%, 0);
+    }
 }
 
-/* Banner */
+/* Banner Shiho di awal */
 .banner-container {
     width: 100%;
     position: relative;
@@ -113,7 +130,7 @@ body {
     display: block; 
 }
 
-/* Navbars */
+/* Circular Navbar */
 .navbar {
     position: fixed;
     top: 32px;
@@ -156,30 +173,31 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.home-icon { 
-    -webkit-mask-image: url('/static/img/navbar/home.svg'); 
-    mask-image: url('/static/img/navbar/home.svg'); 
+.home-icon {
+    mask-image: url('/static/img/navbar/home.svg');
+    -webkit-mask-image: url('/static/img/navbar/home.svg');
 }
 
-.about-icon { 
-    -webkit-mask-image: url('/static/img/navbar/about.svg'); 
-    mask-image: url('/static/img/navbar/about.svg'); 
+.about-icon {
+    mask-image: url('/static/img/navbar/about.svg');
+    -webkit-mask-image: url('/static/img/navbar/about.svg');
 }
 
-.exp-icon { 
-    -webkit-mask-image: url('/static/img/navbar/exp.svg'); 
-    mask-image: url('/static/img/navbar/exp.svg'); 
+.exp-icon {
+    mask-image: url('/static/img/navbar/exp.svg');
+    -webkit-mask-image: url('/static/img/navbar/exp.svg');
 }
 
-.contact-icon { 
-    -webkit-mask-image: url('/static/img/navbar/contact.svg'); 
-    mask-image: url('/static/img/navbar/contact.svg'); 
+.contact-icon {
+    mask-image: url('/static/img/navbar/contact.svg');
+    -webkit-mask-image: url('/static/img/navbar/contact.svg');
 }
 
 .nav-item:hover .nav-icon {
     background-color: #67B854;
 }
 
+/* Setup Posisi Base Section (About, Experience, Footer) */
 .about, .experience {
     position: relative; 
     width: 100%;
@@ -206,7 +224,7 @@ body {
     z-index: 10; 
 }
 
-/* About Me */
+/* Komponen About Me */
 .about-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -242,6 +260,7 @@ body {
     align-items: flex-start;
 }
 
+/* Slider Foto Profile & Navigasi Kiri-Kanan */
 .about-left {
     position: relative;
     width: 430px;
@@ -329,6 +348,7 @@ body {
     pointer-events: auto;
 }
 
+/* Bio & Interest Clicker */
 .about-right {
     display: flex;
     flex-direction: column;
@@ -434,6 +454,7 @@ body {
     pointer-events: auto;
 }
 
+/* Komponen Education */
 .education-col {
     display: flex;
     flex-direction: column;
@@ -495,7 +516,21 @@ body {
     height: 150px;
 }
 
-/* Experience */
+.extra-card {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.quote-text {
+    font-size: 22px;
+    font-weight: 600;
+    font-style: italic;
+    color: #FFFFFF;
+    line-height: 1.3;
+}
+
+/* Komponen Experience */
 .exp-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -566,7 +601,7 @@ body {
 }
 
 .exp-card {
-    width: 500px;
+    width: 687px; 
     height: 234px;
     background: #FFFFFF;
     border-radius: 12px;
@@ -650,13 +685,14 @@ body {
 
 #exp-page1:checked ~ .exp-slider .exp-page.page-1,
 #exp-page2:checked ~ .exp-slider .exp-page.page-2,
-#exp-page3:checked ~ .exp-slider .exp-page.page-3 {
+#exp-page3:checked ~ .exp-slider .exp-page.page-3,
+#exp-page4:checked ~ .exp-slider .exp-page.page-4,
+#exp-page5:checked ~ .exp-slider .exp-page.page-5 {
     opacity: 1;
     pointer-events: auto;
 }
 
-/* Footer */
-
+/* Komponen Footer */
 .footer-content {
     position: relative;
     max-width: 1440px;
@@ -700,7 +736,7 @@ body {
     gap: 15px;
 }
 
-.contact-icons {
+img.contact-icon {
     width: 32px;
     height: 32px;
     object-fit: contain;
@@ -722,4 +758,217 @@ body {
     font-size: 14px;
     font-weight: 400;
     color: #888888; 
+}
+
+
+/* Responsivity Mobile dan Tablet (Max 992px) */
+@media (max-width: 992px) {
+    .main-wrap { 
+        min-height: 100vh; 
+        background-repeat: repeat;
+        background-size: 800px auto; 
+    }
+    
+    .navbar {
+        width: 90%;
+        max-width: 320px;
+    }
+
+    .banner-image {
+        height: 100vh;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .welcome-text-container {
+        top: 45vh;
+    }
+
+    .fade-text {
+        font-size: 36px;
+    }
+
+    .start-btn {
+        top: 55vh;
+        width: 220px;
+        height: 65px;
+        font-size: 28px;
+    }
+
+    .about {
+        margin-top: 40px;
+    }
+
+    .about-header, .exp-header {
+        width: 100%;
+    }
+
+    .about-title, .exp-title {
+        font-size: 32px;
+    }
+
+    .about-line, .exp-line {
+        width: 80%;
+    }
+
+    .about-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .about-left {
+        width: 90vw;
+        max-width: 350px;
+        height: 420px;
+    }
+
+    .slider-bg-accent {
+        width: 100%;
+        height: 100%;
+        left: -10px;
+        top: 10px;
+    }
+
+    .photo-slider {
+        width: 100%;
+        height: 100%;
+    }
+
+    .about-right {
+        width: 90vw;
+        padding: 0;
+    }
+
+    .bio-card {
+        width: 100%;
+        height: auto;
+        min-height: 150px;
+        padding: 20px;
+    }
+
+    .bio-text {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    .about-right-bottom {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .interest-card, .edu-card, .extra-card {
+        width: 100%;
+        height: auto;
+        min-height: 200px;
+    }
+
+    .interest-clicker {
+        width: 100%;
+        max-width: 254px;
+    }
+
+    .edu-clicker {
+        margin-top: 30px;
+    }
+
+    .edu-item img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .edu-label {
+        font-size: 20px;
+    }
+
+    .experience {
+        margin-top: 80px;
+    }
+    
+    .exp-slider-container {
+        height: 300px;
+    }
+
+    .exp-cards-wrapper {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0 45px; 
+    }
+
+    .exp-card {
+        width: 100%;
+        height: auto;
+        min-height: 160px;
+        padding: 15px 15px 15px 45px;
+    }
+
+    .exp-card-accent {
+        width: 15px;
+    }
+
+    .exp-logo-container {
+        width: 70px;
+        height: 70px;
+        margin-right: 15px;
+    }
+
+    .exp-details {
+        width: calc(100% - 85px);
+        padding-right: 0;
+    }
+
+    .exp-org {
+        font-size: 18px;
+    }
+
+    .exp-role {
+        font-size: 14px;
+    }
+
+    .exp-date {
+        font-size: 12px;
+    }
+
+    .nav-btn {
+        width: 30px;
+        height: 30px;
+    }
+
+    .footer-section {
+        position: relative; 
+        height: auto;
+        margin-top: 100px;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        gap: 30px;
+        padding: 32px 20px;
+    }
+
+    .contact-left {
+        width: 100%;
+        align-items: flex-start;
+    }
+    
+    .contact-list {
+        align-items: flex-start; 
+    }
+    
+    .contact-title, .contact-line {
+        margin-left: 0;
+    }
+
+    .contact-line {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .copyright-right {
+        align-self: center; 
+        width: 100%;
+        text-align: center;
+    }
 }

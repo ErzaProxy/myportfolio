@@ -4,193 +4,207 @@
     box-sizing: border-box;
 }
 
-:root {
-    --ink: #1c1917;
-    --paper: #FFFFFF;
-    --accent: #D8FA00;
-    --accent-dark: #BBDD22;
-    --line: #EFEFEF;
-    --text-muted: #222122;
-    --radius: 4px;
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background-color: var(--paper);
-    line-height: 1.6;
+    background-color: #333333; 
+    font-family: 'Host Grotesk', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-h1, .brand {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
-}
-
-.container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-}
-
-.hero {
-    padding: 4.5rem 0 5rem;
-}
-
-.hero-grid {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    grid-template-areas:
-        "identity photo"
-        "details  photo";
-    gap: 1.5rem 3rem;
-}
-
-.hero-identity {
-    grid-area: identity;
-}
-
-.hero-details {
-    grid-area: details;
-}
-
-.hero-kicker {
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent-dark);
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-}
-
-.hero-identity h1 {
-    font-size: clamp(3rem, 7vw, 5rem);
-    line-height: 0.95;
-}
-
-.bio {
-    color: var(--text-muted);
-    max-width: 480px;
-    margin-bottom: 1.5rem;
-}
-
-.meta-list {
-    display: flex;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
-}
-
-.meta-row dt {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin-bottom: 0.15rem;
-}
-
-.meta-row dd {
-    font-weight: 600;
-}
-
-.social-links {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.social-link {
-    display: inline-block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    color: var(--paper);
-    background-color: var(--ink);
-    border-radius: var(--radius);
-    padding: 0.5rem 1.1rem;
-    transition: background-color 0.2s ease;
-}
-
-.social-link:hover {
-    background-color: var(--accent);
-}
-
-.hero-photo {
-    grid-area: photo;
-    align-self: center;
+.main-wrap {
+    width: 100%;
+    min-height: 2723px; 
+    background-color: #67B854; 
+    background-image: url('/static/img/background/patterns.svg');
+    background-position: 0 946px; 
+    background-size: 100% auto; 
+    background-repeat: no-repeat; 
+    margin: 0 auto; 
+    overflow: hidden; 
     position: relative;
 }
 
-.photo-block {
+/* Urusan animated text */
+.welcome-text-container {
     position: absolute;
-    top: 1.25rem;
-    left: 1.25rem;
+    top: 500px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
-    height: 100%;
-    background-color: var(--accent);
-    border-radius: var(--radius);
-    z-index: 0;
 }
 
-.avatar {
-    position: relative;
-    z-index: 1;
-    display: block;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border-radius: var(--radius);
-    border: 3px solid var(--ink);
+.fade-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    font-size: 64px;
+    color: #FFFFFF;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    animation: fadeCycle 9s infinite;
 }
 
-/* Nyamnyamnyam */
-.site-header {
-    border-bottom: 1px solid var(--line);
+.text-1 { 
+    animation-delay: 0s; 
 }
 
-.site-header .container {
+.text-2 { 
+    animation-delay: 3s; 
+}
+
+.text-3 { 
+    animation-delay: 6s; 
+}
+
+@keyframes fadeCycle {
+    0% { opacity: 0; }
+    5% { opacity: 1; }
+    28% { opacity: 1; }
+    33.33% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+/* start button */
+.start-btn {
+    position: absolute;
+    top: 600px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 329px;
+    height: 87px;
+    background: rgba(187, 221, 34, 0.85);
+    border: 1px solid #FFFFFF;
+    border-radius: 50px;
+    text-decoration: none;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 1.25rem 1.5rem;
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 40px;
 }
 
-.brand {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--ink);
-    text-decoration: none;
+.start-btn:hover {
+    animation: jumpOnce 0.5s ease-in-out 1;
 }
 
-.site-header nav {
+@keyframes jumpOnce {
+    0% {
+        transform: translate(-50%, 0);
+    }
+    50% {
+        transform: translate(-50%, -15px);
+    }
+    100% {
+        transform: translate(-50%, 0);
+    }
+}
+
+/* Banner Shiho yang di awal */
+.banner-container {
+    width: 100%;
+    position: relative;
+}
+
+.banner-image {
+    width: 100%;
+    height: auto;
+    display: block; 
+}
+
+/* Circular Navbar */
+.navbar {
+    position: fixed;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 296px;
+    height: 68px;
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid #FFFFFF;
+    border-radius: 28px;
+    backdrop-filter: blur(8px);
     display: flex;
-    gap: 2rem;
+    justify-content: space-evenly;
+    align-items: center;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.site-header nav a {
-    color: var(--ink);
+.nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
     text-decoration: none;
-    font-size: 0.95rem;
+    transition: all 0.3s ease;
 }
 
-.site-footer {
-    padding: 1.5rem;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    border-top: 1px solid var(--line);
+.nav-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #222122;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    transition: background-color 0.3s ease;
 }
 
-@media (max-width: 600px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "identity"
-            "photo"
-            "details";
-    }
+.home-icon { 
+    -webkit-mask-image: url('/static/img/navbar/home.svg'); 
+    mask-image: url('/static/img/navbar/home.svg'); 
+}
 
-    .hero-photo {
-        max-width: 220px;
-    }
+.about-icon { 
+    -webkit-mask-image: url('/static/img/navbar/about.svg'); 
+    mask-image: url('/static/img/navbar/about.svg'); 
+}
 
-    .social-links {
-        justify-content: flex-start;
-    }
+.exp-icon { 
+    -webkit-mask-image: url('/static/img/navbar/exp.svg'); 
+    mask-image: url('/static/img/navbar/exp.svg'); 
+}
+
+.contact-icon { 
+    -webkit-mask-image: url('/static/img/navbar/contact.svg'); 
+    mask-image: url('/static/img/navbar/contact.svg'); 
+}
+
+.nav-item:hover .nav-icon {
+    background-color: #67B854;
+}
+
+.about, .experience {
+    position: absolute;
+    width: 100%;
+    left: 0;
+}
+
+.about {
+    top: 893px;
+}
+
+.experience {
+    top: 1675px;
+}
+
+.footer-section {
+    width: 100%;
+    height: 280px; 
+    background-color: #222122;
+    position: absolute;
+    bottom: 0; 
+    left: 0;
+    z-index: 10; 
 }

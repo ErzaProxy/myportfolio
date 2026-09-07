@@ -6,56 +6,49 @@
     <title>Muhammad Raihan Al Qadri Kusumaputra - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <header class="site-header">
-        <div class="container">
-            <a href="#profile" class="brand">Qodri</a>
-            <nav>
-                <a href="#profile">Profile</a>
-            </nav>
-        </div>
-    </header>
+    <main class="main-wrap">
 
-    <main>
-        <section class="hero" id="profile">
-            <div class="container hero-grid">
-                <div class="hero-identity">
-                    <p class="hero-kicker">Computer Science &middot; Universitas Indonesia</p>
-                    <h1>Muhammad Raihan Al Qadri Kusumaputra</h1>
-                </div>
-                <div class="hero-photo">
-                    <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/Shiho.jpg" alt="My Oshi Gwejh">
-                </div>
-                <div class="hero-details">
-                    <p class="bio">A Weeb CS Student that's interested on Game Dev and Data Science, though still has zero understanding about them. Hate corn to the core.</p>
-                    <dl class="meta-list">
-                        <div class="meta-row">
-                            <dt>NPM</dt>
-                            <dd>2506602334</dd>
-                        </div>
-                        <div class="meta-row">
-                            <dt>Program</dt>
-                            <dd>S1 Ilmu Komputer</dd>
-                        </div>
-                    </dl>
-                    <div class="social-links">
-                        <a href="https://github.com/ErzaProxy" class="social-link">GitHub</a>
-                        <a href="https://linkedin.com/muhammad-raihan-al-qadri-kusumaputra-009156369" class="social-link">LinkedIn</a>
-                        <a href="mailto:qodrizabi255@gmail.com" class="social-link">Email</a>
-                    </div>
-                </div>
+        {% comment %} Navbar {% endcomment %}
+        <nav class="navbar">
+            <a href="#home" class="nav-item">
+                <div class="nav-icon home-icon"></div>
+            </a>
+            <a href="#about" class="nav-item">
+                <div class="nav-icon about-icon"></div>
+            </a>
+            <a href="#experience" class="nav-item">
+                <div class="nav-icon exp-icon"></div>
+            </a>
+            <a href="#contact" class="nav-item">
+                <div class="nav-icon contact-icon"></div>
+            </a>
+        </nav>
+
+        <div id="home" class="banner-container">
+            <img src="/static/img/background/banner.png" alt="Top Banner" class="banner-image">
+            <div class="welcome-text-container">
+            <span class="fade-text text-1">Welcome</span>
+            <span class="fade-text text-2">Selamat Datang</span>
+            <span class="fade-text text-3">いらっしゃいませ</span>
             </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 Qodri. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+            <a href="#about" class="start-btn">START</a>
         </div>
-    </footer>
+
+        <div id="about" class="about">
+
+        </div>
+
+        <div id="experience" class="experience">
+
+        </div>
+        
+        <footer id="contact" class="footer-section">
+
+        </footer>
+    </main>
 </body>
 </html>

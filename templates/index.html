@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Muhammad Raihan Al Qadri Kusumaputra - Portfolio</title>
+    <title>{{ name }} - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
             <a href="#about" class="nav-item">
                 <div class="nav-icon about-icon"></div>
             </a>
-            <a href="#experience" class="nav-item">
+            <a href="{% url 'main:show_experience' %}" class="nav-item">
                 <div class="nav-icon exp-icon"></div>
             </a>
             <a href="#contact" class="nav-item">
@@ -56,13 +56,13 @@
                                 <input type="radio" name="photo-nav" id="foto2">
 
                                 <div class="slide-wrapper slide-1">
-                                    <img src="/static/img/qodri/foto1.jpeg" alt="Foto 1" class="profile-img">
+                                    <img src="/static/img/qodri/foto1.jpeg" alt="Foto 1 of {{ name }}" class="profile-img">
                                     <label for="foto2" class="nav-btn prev-btn"></label>
                                     <label for="foto2" class="nav-btn next-btn"></label>
                                 </div>
 
                                 <div class="slide-wrapper slide-2">
-                                    <img src="/static/img/qodri/foto2.jpeg" alt="Foto 2" class="profile-img">
+                                    <img src="/static/img/qodri/foto2.jpeg" alt="Foto 2 of {{ name }}" class="profile-img">
                                     <label for="foto1" class="nav-btn prev-btn"></label>
                                     <label for="foto1" class="nav-btn next-btn"></label>
                                 </div>
@@ -74,7 +74,7 @@
                             
                             <div class="info-card bio-card">
                                 <h3 class="card-title">Hello!</h3>
-                                <p class="bio-text">I'm Qodri/Bodrex. An Otaku CS Student that's interested on Game Dev and Data Science, though still has zero understanding about them.</p>
+                                <p class="bio-text">{{ bio }}</p>
                             </div>
 
                             <div class="about-right-bottom">
@@ -134,8 +134,8 @@
                                         </div>
                                     </div>
                                     <div class="info-card extra-card">
-                                        <h3 class="card-title">Favorite Quote</h3>
-                                        <p class="quote-text">"May Tomorrow be A Better Day"</p>
+                                        <p class="quote-text">Prodi: {{ study_program }}</p>
+                                        <p class="quote-text">NPM: {{ npm }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -285,7 +285,7 @@
                 </div>
 
                 <div class="copyright-right">
-                    <p class="copyright-text">&copy; 2026 Qodri. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+                    <p class="copyright-text">&copy; 2026  {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
                 </div>
             </div>
         </footer>

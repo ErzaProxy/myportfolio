@@ -1,0 +1,264 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #67B854;
+    font-family: 'Host Grotesk', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+.menu-wrap {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background-color: #67B854;
+    overflow: hidden;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.carousel-backgrounds {
+    position: absolute;
+    width: 100%;
+    height: 64.35%;
+    top: 14.16%;
+    left: 0;
+    z-index: 1;
+}
+
+.bg-img {
+    position: absolute;
+    width: 100%;
+    height: 120%;
+    top: -10px;
+    left: 0;
+    object-fit: cover;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.master-frame {
+    position: absolute;
+    width: 100vw;
+    height: 110vh;
+    top: -60px;
+    left: 0;
+    pointer-events: none;
+    z-index: 10;
+    object-fit: cover;
+}
+
+.menu-header {
+    position: absolute;
+    top: 1.5%;
+    left: 4.65%;
+    display: flex;
+    align-items: center;
+    gap: 1.5vw;
+    z-index: 9999;
+    pointer-events: auto;
+}
+
+.back-btn {
+    display: block;
+    width: 4.65vw;
+    height: 4.65vw;
+    background-color: #FFFFFF;
+    -webkit-mask-image: url('/static/img/menu/back.svg');
+    mask-image: url('/static/img/menu/back.svg');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+.back-btn:hover {
+    background-color: #E2E2E2;
+}
+
+.main-title {
+    font-weight: 800;
+    font-size: 4.44vw;
+    color: #FFFFFF;
+    line-height: 1.2;
+}
+
+.chibi-icon {
+    position: absolute;
+    width: 7.34vw;
+    height: 7.34vw;
+    right: 4.65%;
+    top: -2%;
+    background: url('/static/img/menu/chibi.svg') no-repeat center/contain;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.contact-btn {
+    position: absolute;
+    display: block;
+    width: 4vw;
+    height: 4vw;
+    right: 4.65%;
+    bottom: 6.54%;
+    background-color: #FFFFFF;
+    -webkit-mask-image: url('/static/img/menu/contact.svg');
+    mask-image: url('/static/img/menu/contact.svg');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    z-index: 9999;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.3s ease;
+}
+
+.contact-btn:hover {
+    transform: scale(1.1);
+}
+
+.carousel-contents {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.menu-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.section-title {
+    position: absolute;
+    left: 6%;
+    top: 69.77%;
+    font-weight: 800;
+    font-size: 4.44vw;
+    color: #FFFFFF;
+    line-height: 1.2;
+}
+
+.bottom-nav {
+    position: absolute;
+    top: 82.32%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.7vw;
+    pointer-events: none;
+}
+
+.nav-arrow, .nav-pill {
+    pointer-events: auto;
+}
+
+.nav-arrow {
+    width: 4.65vw;
+    height: 4.65vw;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.arrow-left {
+    -webkit-mask-image: url('/static/img/menu/left.svg');
+    mask-image: url('/static/img/menu/left.svg');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+
+.arrow-right {
+    -webkit-mask-image: url('/static/img/menu/right.svg');
+    mask-image: url('/static/img/menu/right.svg');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+
+.nav-arrow:hover {
+    background-color: #E2E2E2;
+}
+
+.nav-pill {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.inactive-pill {
+    width: 13.7vw;
+    height: 3.6vw;
+    border: 0.12vw solid rgba(255, 255, 255, 0.75);
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1.66vw;
+    color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+}
+
+.inactive-pill:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.active-pill {
+    width: 22.84vw;
+    height: 6vw;
+    border: 0.2vw solid #FFFFFF;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 2.77vw;
+    color: #FFFFFF;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.active-pill:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.02);
+}
+
+input#nav-about:checked ~ .carousel-backgrounds .bg-about,
+input#nav-exp:checked ~ .carousel-backgrounds .bg-exp,
+input#nav-art:checked ~ .carousel-backgrounds .bg-art,
+input#nav-proj:checked ~ .carousel-backgrounds .bg-proj {
+    opacity: 1;
+    visibility: visible;
+}
+
+input#nav-about:checked ~ .carousel-contents .slide-about-content,
+input#nav-exp:checked ~ .carousel-contents .slide-exp-content,
+input#nav-art:checked ~ .carousel-contents .slide-art-content,
+input#nav-proj:checked ~ .carousel-contents .slide-proj-content {
+    opacity: 1;
+    visibility: visible;
+}

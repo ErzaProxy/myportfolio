@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name }} - About</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/aboit.css">
+</head>
+<body>
+    <main class="main-wrap">
+        
+        <header class="menu-header">
+            <a href="{% url 'main:show_menu' %}" class="back-btn"></a>
+            <h1 class="main-title">About Me.</h1>
+        </header>
+
+        <nav class="navbar">
+            <a href="{% url 'main:show_main' %}" class="nav-item">
+                <div class="nav-icon home-icon"></div>
+            </a>
+            <a href="{% url 'main:show_about' %}" class="nav-item">
+                <div class="nav-icon about-icon"></div>
+            </a>
+            <a href="{% url 'main:show_experience' %}" class="nav-item">
+                <div class="nav-icon exp-icon"></div>
+            </a>
+            <a href="{% url 'main:show_artfolio' %}" class="nav-item">
+                <div class="nav-icon art-icon"></div>
+            </a>
+            <a href="{% url 'main:show_project' %}" class="nav-item">
+                <div class="nav-icon proj-icon"></div>
+            </a>
+            <a href="#contact" class="nav-item">
+                <div class="nav-icon contact-icon"></div>
+            </a>
+        </nav>
+
+        <div id="about" class="about">
+            <div class="about-container">
+                <div class="about-content">
+                    
+                    <div class="about-left">
+                        <div class="slider-bg-accent"></div>
+                        <div class="photo-slider">
+                            <input type="radio" name="photo-nav" id="foto1" checked>
+                            <input type="radio" name="photo-nav" id="foto2">
+
+                            <div class="slide-wrapper slide-1">
+                                <img src="/static/img/qodri/foto1.jpeg" alt="Foto 1 of {{ name }}" class="profile-img">
+                                <label for="foto2" class="nav-btn prev-btn"></label>
+                                <label for="foto2" class="nav-btn next-btn"></label>
+                            </div>
+
+                            <div class="slide-wrapper slide-2">
+                                <img src="/static/img/qodri/foto2.jpeg" alt="Foto 2 of {{ name }}" class="profile-img">
+                                <label for="foto1" class="nav-btn prev-btn"></label>
+                                <label for="foto1" class="nav-btn next-btn"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-right">
+                        
+                        <div class="profile-card-wrapper">
+                            <div class="profile-title-box">Profile</div>
+                            <div class="profile-card-inner">
+                                <div class="profile-row">
+                                    <div class="profile-pill">Nama</div>
+                                    <div class="profile-text">{{ name }}</div>
+                                </div>
+                                <div class="profile-row">
+                                    <div class="profile-pill">NPM</div>
+                                    <div class="profile-text">{{ npm }}</div>
+                                </div>
+                                <div class="profile-row">
+                                    <div class="profile-pill">Prodi</div>
+                                    <div class="profile-text">{{ study_program }}</div>
+                                </div>
+                                <div class="profile-row">
+                                    <div class="profile-pill">Birth Date</div>
+                                    <div class="profile-text">{{ birth_date }}</div>
+                                </div>
+                                <div class="profile-row">
+                                    <div class="profile-pill">Hobbies</div>
+                                    <div class="profile-text">{{ hobbies }}</div>
+                                </div>
+                                <div class="profile-row">
+                                    <div class="profile-pill">Fav. Food</div>
+                                    <div class="profile-text">{{ fav_food }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-card bio-card">
+                            <h3 class="card-title">Hello!</h3>
+                            <p class="bio-text">{{ bio }}</p>
+                        </div>
+
+                        <div class="about-right-bottom">
+                            <div class="info-card interest-card">
+                                <h3 class="card-title">I'm a fan of...</h3>
+                                <div class="interest-clicker">
+                                    <input type="radio" name="interest-nav" id="int1" checked>
+                                    <input type="radio" name="interest-nav" id="int2">
+                                    <input type="radio" name="interest-nav" id="int3">
+                                    <input type="radio" name="interest-nav" id="int4">
+                                    <input type="radio" name="interest-nav" id="int5">
+
+                                    <div class="interest-item int-1">
+                                        <label for="int2"><img src="/static/img/interest/anime.jpeg" alt="Animanga"></label>
+                                        <span class="interest-label">Animanga</span>
+                                    </div>
+                                    <div class="interest-item int-2">
+                                        <label for="int3"><img src="/static/img/interest/indiegame.png" alt="Indie Game"></label>
+                                        <span class="interest-label">Indie Game</span>
+                                    </div>
+                                    <div class="interest-item int-3">
+                                        <label for="int4"><img src="/static/img/interest/mochikei.jpg" alt="Mochizuki Kei's Artwork"></label>
+                                        <span class="interest-label">Mochizuki Kei's Artwork</span>
+                                    </div>
+                                    <div class="interest-item int-4">
+                                        <label for="int5"><img src="/static/img/interest/proseka.png" alt="Project Sekai"></label>
+                                        <span class="interest-label">Project Sekai</span>
+                                    </div>
+                                    <div class="interest-item int-5">
+                                        <label for="int1"><img src="/static/img/interest/shiho.png" alt="Hinomori Shiho"></label>
+                                        <span class="interest-label">Hinomori Shiho</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="education-col">
+                                <div class="info-card edu-card">
+                                    <h3 class="card-title">Education</h3>
+                                    <div class="edu-clicker">
+                                        <input type="radio" name="edu-nav" id="edu1" checked>
+                                        <input type="radio" name="edu-nav" id="edu2">
+                                        <div class="edu-item item-1">
+                                            <label for="edu2">
+                                                <img src="/static/img/education/jusat.png" alt="SMAN 71 JAKARTA">
+                                                <span class="edu-label">SMAN 71 JAKARTA</span>
+                                            </label>
+                                        </div>
+                                        <div class="edu-item item-2">
+                                            <label for="edu1">
+                                                <img src="/static/img/education/pacil.png" alt="Prodi Ilmu Komputer, Universitas Indonesia">
+                                                <span class="edu-label">Prodi Ilmu Komputer, Universitas Indonesia</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info-card extra-card">
+                                    <h3 class="card-title">Favorite Quote</h3>
+                                    <p class="quote-text">"May Tomorrow be A Better Day"</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

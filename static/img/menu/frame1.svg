@@ -1,0 +1,36 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="26.0501" height="894.795" transform="matrix(0.947067 0.321035 -0.363996 0.931401 1657.36 105.587)" fill="white"/>
+<rect width="26.0501" height="894.795" transform="matrix(0.947067 0.321035 -0.363996 0.931401 1711.06 105.587)" fill="white"/>
+<path d="M0 -51H1920V200H0V-51Z" fill="url(#pattern0_183_201)"/>
+<path d="M0 843H1920V1153H0V843Z" fill="url(#pattern1_183_201)"/>
+<rect y="835" width="1920" height="8" fill="white"/>
+<rect y="191" width="1920" height="10" fill="white"/>
+<defs>
+<pattern id="pattern0_183_201" patternUnits="userSpaceOnUse" patternTransform="matrix(33.3 0 0 33.3 0 -51)" preserveAspectRatio="none" viewBox="0 0 33.3 33.3" width="1" height="1">
+<use xlink:href="#pattern0_183_201_inner" transform="translate(-33.3 -33.3)"/>
+<use xlink:href="#pattern0_183_201_inner" transform="translate(0 -33.3)"/>
+<use xlink:href="#pattern0_183_201_inner" transform="translate(-33.3 0)"/>
+<g id="pattern0_183_201_inner">
+<g clip-path="url(#clip0_183_201)">
+<rect width="37" height="37" fill="white"/>
+<rect x="1.5" y="1.5" width="34" height="34" fill="#67B854" stroke="#8ECC80" stroke-width="3"/>
+</g>
+</g>
+</pattern><pattern id="pattern1_183_201" patternUnits="userSpaceOnUse" patternTransform="matrix(33.3 0 0 33.3 0 843)" preserveAspectRatio="none" viewBox="0 0 33.3 33.3" width="1" height="1">
+<use xlink:href="#pattern1_183_201_inner" transform="translate(-33.3 -33.3)"/>
+<use xlink:href="#pattern1_183_201_inner" transform="translate(0 -33.3)"/>
+<use xlink:href="#pattern1_183_201_inner" transform="translate(-33.3 0)"/>
+<g id="pattern1_183_201_inner">
+<g clip-path="url(#clip1_183_201)">
+<rect width="37" height="37" fill="white"/>
+<rect x="1.5" y="1.5" width="34" height="34" fill="#67B854" stroke="#8ECC80" stroke-width="3"/>
+</g>
+</g>
+</pattern><clipPath id="clip0_183_201">
+<rect width="37" height="37" fill="white"/>
+</clipPath>
+<clipPath id="clip1_183_201">
+<rect width="37" height="37" fill="white"/>
+</clipPath>
+</defs>
+</svg>

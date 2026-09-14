@@ -28,3 +28,7 @@ Tantangan terbesar dalam menjaga tata letak tetap responsif dan menarik adalah t
 
 Website yang Anda buat saat ini adalah static web murni. Batasan apa yang Anda rasakan saat mencoba menyajikan informasi pada portofolio Anda secara optimal? Berdasarkan batasan tersebut, fungsionalitas dinamis apa yang paling ingin Anda persiapkan dan tambahkan pada iterasi proyek selanjutnya?
 Batasan utama yang sangat terasa pada static web murni adalah kekakuan dalam mengelola komponen yang memuat banyak data berulang, seperti carousel/slider pada bagian Experience dan Interest. Untuk saat ini, saya harus mengakalinya menggunakan trik CSS Hidden Radio Button murni karena ketiadaan JavaScript. Ini membuat struktur HTML menjadi repetitif, sangat panjang, dan sulit di-maintain saat mengatur responsivitasnya, bahkan ada yang harus saya rombak ulang idenya (carousel experience). Berdasarkan batasan tersebut, fungsionalitas yang paling ingin saya tambahkan pada iterasi selanjutnya adalah implementasi JavaScript murni untuk mengatur state navigasi carousel agar lebih luwes. 
+
+Sebelumnya untuk versi v0.2.x saya saya izin membuat multiple css files, supaya menghindari terjadinya tumpang tindih style, dan juga menghindari code css yang terlalu panjang. pembedaan css untuk tiap page ini juga bertujuan supaya lebih mudah untuk melakukan tracking terhadap error dan sebagainya
+AI Agent yang digunakan: Gemini Pro
+v0.2.1:

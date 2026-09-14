@@ -1,0 +1,314 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #333333; 
+    background-image: url('/static/img/experience/background.svg');
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: repeat;
+    background-spacing: -10px;
+    font-family: 'Host Grotesk', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.main-wrap {
+    width: 100%;
+    min-height: 100vh; 
+    margin: 0 auto; 
+    position: relative;
+    padding-bottom: 100px;
+}
+
+.menu-header {
+    position: absolute;
+    top: 36px;
+    left: 67px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 999;
+}
+
+.back-btn {
+    display: block;
+    width: 67px;
+    height: 67px;
+    background-color: #FFFFFF;
+    -webkit-mask-image: url('/static/img/menu/back.svg');
+    mask-image: url('/static/img/menu/back.svg');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    background-color: #BBDD22;
+}
+
+.main-title {
+    font-weight: 800;
+    font-size: 64px;
+    color: #FFFFFF;
+    line-height: 1.2;
+}
+
+.navbar {
+    position: fixed;
+    top: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 444px;
+    height: 68px;
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid #FFFFFF;
+    border-radius: 28px;
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #222122;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    transition: background-color 0.3s ease;
+}
+
+.home-icon {
+    mask-image: url('/static/img/navbar/home.svg');
+    -webkit-mask-image: url('/static/img/navbar/home.svg');
+}
+
+.about-icon {
+    mask-image: url('/static/img/navbar/about.svg');
+    -webkit-mask-image: url('/static/img/navbar/about.svg');
+}
+
+.exp-icon {
+    mask-image: url('/static/img/navbar/exp.svg');
+    -webkit-mask-image: url('/static/img/navbar/exp.svg');
+}
+
+.art-icon {
+    mask-image: url('/static/img/navbar/artfolio.svg');
+    -webkit-mask-image: url('/static/img/navbar/artfolio.svg');
+}
+
+.proj-icon {
+    mask-image: url('/static/img/navbar/project.svg');
+    -webkit-mask-image: url('/static/img/navbar/project.svg');
+}
+
+.contact-icon {
+    mask-image: url('/static/img/navbar/contact.svg');
+    -webkit-mask-image: url('/static/img/navbar/contact.svg');
+}
+
+.nav-item:hover .nav-icon {
+    background-color: #67B854;
+}
+
+.exp-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    padding-top: 150px; 
+    z-index: 10;
+}
+
+.exp-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 46px;
+    width: 100%;
+}
+
+.exp-card {
+    width: 687px; 
+    min-height: 234px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    padding: 30px 30px 30px 55px;
+}
+
+.exp-card-accent {
+    position: absolute;
+    left: -0.2px;
+    top: 0;
+    width: 26px;
+    height: 100%;
+    background: #FCDFB3;
+    border-radius: 12px 0 0 12px;
+}
+
+.exp-logo-container {
+    position: relative;
+    width: 148px;
+    height: 148px;
+    margin-right: 35px;
+    flex-shrink: 0;
+}
+
+.exp-logo-frame {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #B8D85F;
+    border-radius: 45px;
+    box-shadow: 0px 0px 6px rgba(105, 84, 3, 0.4);
+    top: 0;
+    left: 0;
+}
+
+.exp-logo-container img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 45px;
+    top: 0;
+    left: 0;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+.exp-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
+
+.exp-org {
+    font-size: 28px;
+    font-weight: 700;
+    color: #BBDD22;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.exp-role {
+    font-size: 18px;
+    font-weight: 700;
+    color: #222122;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.exp-desc {
+    font-size: 16px;
+    font-weight: 400;
+    color: #444444;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    text-align: justify;
+}
+
+.exp-date {
+    font-size: 14px;
+    font-weight: 600;
+    color: #888888;
+}
+
+.exp-empty {
+    font-size: 24px;
+    color: #FFFFFF;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 50px;
+}
+
+@media (max-width: 992px) {
+    .menu-header {
+        top: 20px;
+        left: 20px;
+        gap: 15px;
+    }
+
+    .back-btn {
+        width: 45px;
+        height: 45px;
+    }
+
+    .main-title {
+        font-size: 32px;
+    }
+
+    .navbar {
+        display: none;
+    }
+
+    .exp-container {
+        padding-top: 100px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .exp-card {
+        width: 100%;
+        max-width: 500px;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 20px 30px 45px;
+        text-align: center;
+    }
+
+    .exp-card-accent {
+        width: 15px;
+    }
+
+    .exp-logo-container {
+        width: 100px;
+        height: 100px;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .exp-logo-frame {
+        border-radius: 30px;
+    }
+
+    .exp-logo-container img {
+        border-radius: 30px;
+    }
+
+    .exp-desc {
+        text-align: center;
+    }
+}

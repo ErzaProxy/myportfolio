@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name }} - Contact</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/cont.css">
+</head>
+<body>
+    <main class="main-wrap">
+        <header class="menu-header">
+            <a href="{% url 'main:show_menu' %}" class="back-btn"></a>
+            <h1 class="main-title">Contact.</h1>
+        </header>
+
+        <nav class="navbar">
+            <a href="{% url 'main:show_main' %}" class="nav-item">
+                <div class="nav-icon home-icon"></div>
+            </a>
+            <a href="{% url 'main:show_about' %}" class="nav-item">
+                <div class="nav-icon about-icon"></div>
+            </a>
+            <a href="{% url 'main:show_experience' %}" class="nav-item">
+                <div class="nav-icon exp-icon"></div>
+            </a>
+            <a href="{% url 'main:show_artfolio' %}" class="nav-item">
+                <div class="nav-icon art-icon"></div>
+            </a>
+            <a href="{% url 'main:show_project' %}" class="nav-item">
+                <div class="nav-icon proj-icon"></div>
+            </a>
+            <a href="{% url 'main:show_contact' %}" class="nav-item">
+                <div class="nav-icon contact-icon"></div>
+            </a>
+        </nav>
+
+        <div class="contact-container">
+            <div class="contact-card">
+                <h2 class="contact-title">Contact Me</h2>
+                <div class="contact-line"></div>
+                <ul class="contact-list">
+                    <li class="contact-item">
+                        <img src="/static/img/contact/instagram.svg" alt="Instagram" class="contact-icons">
+                        <span class="contact-text">@qodrrexx</span>
+                    </li>
+                    <li class="contact-item">
+                        <img src="/static/img/contact/email.svg" alt="Email" class="contact-icons">
+                        <span class="contact-text">qodrizabi255@gmail.com</span>
+                    </li>
+                    <li class="contact-item">
+                        <img src="/static/img/contact/line.svg" alt="Line" class="contact-icons">
+                        <span class="contact-text">nightcetauri21(line)</span>
+                    </li>
+                    <li class="contact-item">
+                        <img src="/static/img/contact/linkedin.svg" alt="LinkedIn" class="contact-icons">
+                        <span class="contact-text">Muhammad Raihan Al Qadri Kusumaputra</span>
+                    </li>
+                    <li class="contact-item">
+                        <img src="/static/img/contact/github.svg" alt="GitHub" class="contact-icons">
+                        <span class="contact-text">ErzaProxy</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="credits-section">
+                <p class="copyright-text">&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+                <p class="art-credit-text">Art Assets & Character Illustrations: &copy; SEGA / &copy; Colorful Palette Inc. / &copy; Crypton Future Media, INC. (Project Sekai: Colorful Stage!)</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

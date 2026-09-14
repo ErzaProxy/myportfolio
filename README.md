@@ -32,3 +32,14 @@ Batasan utama yang sangat terasa pada static web murni adalah kekakuan dalam men
 Sebelumnya untuk versi v0.2.x saya saya izin membuat multiple css files, supaya menghindari terjadinya tumpang tindih style, dan juga menghindari code css yang terlalu panjang. pembedaan css untuk tiap page ini juga bertujuan supaya lebih mudah untuk melakukan tracking terhadap error dan sebagainya
 AI Agent yang digunakan: Gemini Pro
 v0.2.1:
+- Membantu dalam pembuatan menu (banyak bug yang terjadi pada percobaan pertama), terutama dalam urusan ukuran dan layout.
+- sempat ada bug dimana (nama).html gak bisa detect (nama).css sehingga saya meminta bantuan AI untuk mencari tahu ada masalah apa, namun tampaknya ia juga tidak paham, hingga entah somehow bagaimana ketika saya ubah nama filenya bisa, saya sendiri masih bingung hingga titik ini
+- bantu mempercepat refaktor, nentuin attribut css apa aja yang perlu dipindah supaya lebih cepat
+
+v0.2.2:
+- Membantu membuat JSON File supaya lebih cepat aja untuk memasukkan data baru ke database. (Terinspirasi dari Yasmin kelas PBP B)
+- Memastikan unit test sudah mengcover seluruh permintaan
+
+1. Ketika pengguna membuka halaman portofolio, request dari browser pertama kali diterima oleh urls.py tingkat proyek, yang kemudian merutekannya ke urls.py tingkat aplikasi. URL di aplikasi akan mencocokkan path tersebut dan memanggil fungsi yang sesuai di dalam views.py. View bertindak sebagai otak dari alur ini; ia akan mengambil data yang dibutuhkan dari database melalui models.py, lalu mengirimkan data tersebut ke dalam template. Terakhir, template akan merender data tersebut menjadi halaman web utuh yang dikirim kembali sebagai respons untuk ditampilkan pada browser pengguna.
+2. Menyimpan data portofolio pada model jauh lebih baik daripada menuliskannya langsung di dalam template karena membuat halaman web menjadi dinamis dan sangat mudah dikelola. Jika data ditulis langsung di HTML, setiap ada penambahan atau perubahan informasi proyek, pengembang harus membongkar dan mengedit kode sumber secara manual, yang rawan error dan tidak efisien. Dengan menggunakan model, data dipisahkan sepenuhnya dari struktur tampilan, sehingga pembaruan konten dapat dilakukan dengan mudah, misalnya melalui panel Admin, kapan saja tanpa perlu menyentuh kode aplikasi sama sekali.
+3. makemigrations berfungsi untuk mendeteksi setiap perubahan yang dilakukan pada kode model dan membuatkan file riwayat instruksi dari perubahan tersebut, sedangkan migrate berfungsi untuk mengeksekusi instruksi tersebut agar struktur database benar-benar diperbarui sesuai skema. Contohnya, jika menambahkan struktur kolom baru seperti link_github pada model Project yang sudah ada, harus menjalankan makemigrations untuk mencatat rencana penambahan kolom tersebut, lalu menjalankan migrate agar kolom link_github benar-benar dibuat secara fisik di dalam tabel database.

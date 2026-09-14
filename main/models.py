@@ -26,7 +26,25 @@ class Experience(models.Model):
         return self.ended_at is None
     
 # class Art(models.Model):   
-# class Project(models.Model):
+class Project(models.Model):
+    PROJECT_TYPES = [
+        ('web', 'Web Development'),
+        ('mobile', 'Mobile App'),
+        ('game', 'Game Development'),
+        ('data', 'Data Science'),
+        ('other', 'Other'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    nama = models.CharField(max_length=255)
+    tipe = models.CharField(max_length=20, choices=PROJECT_TYPES, default='web')
+    deskripsi = models.TextField()
+    thumbnail = models.URLField(blank=True, null=True)
+    link = models.URLField(blank=True, null=True)
+    skillset = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nama
 
     
 #Untuk Hands-on   

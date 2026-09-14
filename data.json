@@ -5,7 +5,7 @@
     "fields": {
       "title": "Open House Fasilkom 2025",
       "description": "Staff of Digital Engagement and Collaboration",
-      "category": "Part-Time",
+      "category": "volunteer",
       "thumbnail": "/static/img/experience/logoOH25.png",
       "started_at": "2025-08-01T00:00:00Z",
       "ended_at": "2025-12-31T23:59:59Z"
@@ -17,7 +17,7 @@
     "fields": {
       "title": "BETIS",
       "description": "Staff of Angkatan Pengajar",
-      "category": "Part-Time",
+      "category": "volunteer",
       "thumbnail": "/static/img/experience/betis.jpe",
       "started_at": "2026-01-01T00:00:00Z",
       "ended_at": "2026-04-30T23:59:59Z"
@@ -29,7 +29,7 @@
     "fields": {
       "title": "Compfest 18",
       "description": "Staff of UX Academy",
-      "category": "Part-Time",
+      "category": "volunteer",
       "thumbnail": "/static/img/experience/compfest.jpe",
       "started_at": "2026-06-01T00:00:00Z",
       "ended_at": null
@@ -41,7 +41,7 @@
     "fields": {
       "title": "BEM Fasilkom",
       "description": "Staff of Bismit",
-      "category": "Part-Time",
+      "category": "volunteer",
       "thumbnail": "/static/img/experience/bemcil.jpe",
       "started_at": "2026-07-01T00:00:00Z",
       "ended_at": null
@@ -53,10 +53,22 @@
     "fields": {
       "title": "Open House Fasilkom 2026",
       "description": "Person in Contact of Digital Engagement and Collaboration",
-      "category": "Part-Time",
+      "category": "volunteer",
       "thumbnail": "/static/img/experience/logoOH26.png",
       "started_at": "2026-08-01T00:00:00Z",
       "ended_at": null
+    }
+  },
+  {
+    "model": "main.project",
+    "pk": "66666666-6666-6666-6666-666666666666",
+    "fields": {
+      "nama": "iMaba",
+      "tipe": "web",
+      "deskripsi": "Mengerjakan bagian sistem di fasilkom, navigasi informasi non akademik, denah fasilkom dan ngoding101.",
+      "thumbnail": "/static/img/project/iMaba.png",
+      "link": "https://bem.cs.ui.ac.id/imaba",
+      "skillset": "Next.js, TypeScript"
     }
   }
 ]

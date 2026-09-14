@@ -71,7 +71,7 @@ body {
 
 .welcome-text-container {
     position: fixed;
-    top: 750px;
+    top: 550px;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
@@ -88,7 +88,7 @@ body {
 
 .start-btn {
     position: fixed;
-    top: 850px; 
+    top: 650px; 
     left: 50%;
     transform: translateX(-50%);
     width: 329px;

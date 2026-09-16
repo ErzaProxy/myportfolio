@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ name }} - Portfolio{% endblock title %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    {% block meta %}{% endblock meta %}
+</head>
+<body>
+    <main class="main-wrap">
+        <nav class="navbar">
+            <a href="{% url 'main:show_main' %}" class="nav-item">
+                <div class="nav-icon home-icon"></div>
+            </a>
+            <a href="{% url 'main:show_about' %}" class="nav-item">
+                <div class="nav-icon about-icon"></div>
+            </a>
+            <a href="{% url 'main:show_experience' %}" class="nav-item">
+                <div class="nav-icon exp-icon"></div>
+            </a>
+            <a href="{% url 'main:show_artfolio' %}" class="nav-item">
+                <div class="nav-icon art-icon"></div>
+            </a>
+            <a href="{% url 'main:show_project' %}" class="nav-item">
+                <div class="nav-icon proj-icon"></div>
+            </a>
+            <a href="{% url 'main:show_contact' %}" class="nav-item">
+                <div class="nav-icon contact-icon"></div>
+            </a>
+        </nav>
+        {% block content %}{% endblock content %}
+    </main>
+</body>
+</html>

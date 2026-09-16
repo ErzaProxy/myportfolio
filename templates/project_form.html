@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<link rel="stylesheet" href="/static/css/pf.css">
+{% endblock meta %}
+
+{% block title %}Add Project - {{ name }}{% endblock title %}
+
+{% block content %}
+<header class="menu-header">
+    <a href="{% url 'main:show_project' %}" class="back-btn"></a>
+    <h1 class="main-title">Add Project.</h1>
+</header>
+
+<div class="pf-container">
+    <div class="pf-card">
+        <form method="POST" action="{% url 'main:create_project' %}">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}
+                <p class="form-error">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            <div class="pf-actions">
+                <button type="submit" class="submit-btn">Simpan</button>
+                <a href="{% url 'main:show_project' %}" class="cancel-btn">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

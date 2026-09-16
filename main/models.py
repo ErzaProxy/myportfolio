@@ -39,7 +39,7 @@ class Project(models.Model):
     nama = models.CharField(max_length=255)
     tipe = models.CharField(max_length=20, choices=PROJECT_TYPES, default='web')
     deskripsi = models.TextField()
-    thumbnail = models.URLField(blank=True, null=True)
+    thumbnail = models.CharField(max_length=255)
     link = models.URLField(blank=True, null=True)
     skillset = models.CharField(max_length=255)
 

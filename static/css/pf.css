@@ -1,0 +1,143 @@
+body {
+    background-color: #333333;
+    background-image: url('/static/img/about/background.svg');
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: repeat;
+    background-spacing: -10px;
+    font-family: 'Host Grotesk', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-header {
+    position: absolute;
+    top: 36px;
+    left: 67px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 999;
+}
+
+.back-btn {
+    display: block;
+    width: 67px;
+    height: 67px;
+    background-color: #FFFFFF;
+    -webkit-mask-image: url('/static/img/menu/back.svg');
+    mask-image: url('/static/img/menu/back.svg');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    background-color: #BBDD22;
+}
+
+.main-title {
+    font-weight: 800;
+    font-size: 64px;
+    color: #FFFFFF;
+    line-height: 1.2;
+}
+
+.pf-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 160px;
+    padding-bottom: 100px;
+}
+
+.pf-card {
+    background: #FCDFB3;
+    border: 3px solid #FFFFFF;
+    border-radius: 39px;
+    padding: 40px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 18px;
+    font-weight: 800;
+    color: #222122;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #222122;
+    border-radius: 12px;
+    font-family: 'Host Grotesk', sans-serif;
+    font-size: 16px;
+    background: #FFFFFF;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #67B854;
+}
+
+.form-error {
+    color: #d93025;
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: 600;
+}
+
+.pf-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.submit-btn {
+    background: #BBDD22;
+    color: #222122;
+    border: 2px solid #222122;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: #222122;
+    color: #BBDD22;
+}
+
+.cancel-btn {
+    background: #FFFFFF;
+    color: #222122;
+    border: 2px solid #222122;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: 800;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background: #e0e0e0;
+}

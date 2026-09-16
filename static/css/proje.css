@@ -276,6 +276,8 @@ body {
     margin-top: 50px;
 }
 
+
+
 @media (max-width: 992px) {
     .menu-header {
         top: 20px;
@@ -332,5 +334,161 @@ body {
     .proj-link-btn {
         width: 100%;
         text-align: center;
+    }
+}
+
+.proj-actions-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.add-proj-btn {
+    background: #BBDD22;
+    color: #222122;
+    padding: 12px 25px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 16px;
+    border: 2px solid #222122;
+    transition: all 0.3s ease;
+}
+
+.add-proj-btn:hover {
+    background: #222122;
+    color: #BBDD22;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid #FFFFFF;
+    border-radius: 20px;
+    font-family: 'Host Grotesk', sans-serif;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #BBDD22;
+}
+
+.search-btn {
+    background: #FFFFFF;
+    color: #222122;
+    border: 2px solid #FFFFFF;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'Host Grotesk', sans-serif;
+}
+
+.proj-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.delete-proj-btn {
+    background: #FF5555;
+    color: #FFFFFF;
+    border: 2px solid transparent;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: 'Host Grotesk', sans-serif;
+}
+
+.project-delete-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: 0;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-delete-modal:popover-open {
+    display: flex;
+}
+
+.project-delete-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.project-delete-modal__content {
+    position: relative;
+    z-index: 1;
+    background: #FCDFB3;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    border: 3px solid #FFFFFF;
+    text-align: center;
+}
+
+.project-delete-modal__content h2 {
+    margin-top: 0;
+    color: #222122;
+}
+
+.project-delete-modal__actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.cancel-btn {
+    background: #FFFFFF;
+    color: #222122;
+    border: 2px solid #222122;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'Host Grotesk', sans-serif;
+}
+
+.delete-btn-confirm {
+    background: #FF5555;
+    color: #FFFFFF;
+    border: 2px solid #222122;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'Host Grotesk', sans-serif;
+}
+
+@media (max-width: 992px) {
+    .proj-actions-top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-form {
+        max-width: 100%;
     }
 }

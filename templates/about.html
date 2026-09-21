@@ -1,43 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ name }} - About</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/aboit.css">
-</head>
-<body>
+{% extends 'base.html' %}
+
+{%block meta%}
+<link rel="stylesheet" href="/static/css/aboit.css">
+{%endblock meta%}
+
+{% block title %}{{ name }} - About{% endblock title %}
+
+{%block content%}
     <main class="main-wrap">
         
         <header class="menu-header">
             <a href="{% url 'main:show_menu' %}" class="back-btn"></a>
             <h1 class="main-title">About Me.</h1>
         </header>
-
-        <nav class="navbar">
-            <a href="{% url 'main:show_main' %}" class="nav-item">
-                <div class="nav-icon home-icon"></div>
-            </a>
-            <a href="{% url 'main:show_about' %}" class="nav-item">
-                <div class="nav-icon about-icon"></div>
-            </a>
-            <a href="{% url 'main:show_experience' %}" class="nav-item">
-                <div class="nav-icon exp-icon"></div>
-            </a>
-            <a href="{% url 'main:show_artfolio' %}" class="nav-item">
-                <div class="nav-icon art-icon"></div>
-            </a>
-            <a href="{% url 'main:show_project' %}" class="nav-item">
-                <div class="nav-icon proj-icon"></div>
-            </a>
-            <a href="#contact" class="nav-item">
-                <div class="nav-icon contact-icon"></div>
-            </a>
-        </nav>
-
         <div id="about" class="about">
             <div class="about-container">
                 <div class="about-content">
@@ -164,5 +139,4 @@
             </div>
         </div>
     </main>
-</body>
-</html>
+{%endblock content%}

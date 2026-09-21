@@ -25,7 +25,15 @@ class Experience(models.Model):
     def is_ongoing(self):
         return self.ended_at is None
     
-# class Art(models.Model):   
+class Art(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    nama = models.CharField(max_length=255)
+    deskripsi = models.TextField()
+    url = models.URLField()
+
+    def __str__(self):
+        return self.nama
+       
 class Project(models.Model):
     PROJECT_TYPES = [
         ('web', 'Web Development'),

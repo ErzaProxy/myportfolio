@@ -1,5 +1,5 @@
 from django.forms import ModelForm, TextInput, Textarea, URLInput, Select
-from main.models import Project
+from main.models import Project, Art
 
 class ProjectForm(ModelForm):
     class Meta:
@@ -53,6 +53,39 @@ class ProjectForm(ModelForm):
                 attrs={
                     "placeholder": "Next.js, TypeScript",
                     "maxlength": 255,
+                }
+            ),
+        }
+        
+class ArtForm(ModelForm):
+    class Meta:
+        model = Art
+        fields = [
+            "nama",
+            "deskripsi",
+            "url",
+        ]
+        labels = {
+            "nama": "Judul Karya",
+            "deskripsi": "Deskripsi",
+            "url": "URL Gambar",
+        }
+        widgets = {
+            "nama": TextInput(
+                attrs={
+                    "placeholder": "Masukkan judul art",
+                    "maxlength": 255,
+                }
+            ),
+            "deskripsi": Textarea(
+                attrs={
+                    "placeholder": "Deskripsikan art ini",
+                    "rows": 4,
+                }
+            ),
+            "url": URLInput(
+                attrs={
+                    "placeholder": "https://...",
                 }
             ),
         }

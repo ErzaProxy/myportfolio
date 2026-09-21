@@ -47,3 +47,6 @@ v0.2.2:
 AI Agent yang digunakan: Gemini Pro
 v0.3.1:
 - Karena saya kan ada beberapa pages yang tidak mengikuti format pages lainnya, saya ingin tau gimana caranya basenya bisa menghandle page saya yang gak ada navbar dsbnya (kayak index dan menu misalkan), dan Gemini memberikan solusi dan penjelasan tentang teknik blockingnya
+v0.3.2:
+- Membantu aku memahami lebih dalam tentang data deliveries, implemennya dengan baik, terutama pada page artfolio.sama cek kenapa pws ku error gak bisa akses database (yang ternyata karena .env/prod nya banyak yang salah input)
+

@@ -1,0 +1,14 @@
+<div id="delete-art-{{ art.id }}" class="project-delete-modal" popover="auto" role="dialog" aria-modal="true">
+    <div class="project-delete-modal__backdrop" popovertarget="delete-art-{{ art.id }}" popovertargetaction="hide"></div>
+    <div class="project-delete-modal__content">
+        <h2>Hapus Karya?</h2>
+        <p>Apakah kamu yakin ingin menghapus <strong>{{ art.nama }}</strong>?</p>
+        <div class="project-delete-modal__actions">
+            <button type="button" class="cancel-btn" popovertarget="delete-art-{{ art.id }}" popovertargetaction="hide">Batal</button>
+            <form method="post" action="{% url 'main:delete_art' art.id %}">
+                {% csrf_token %}
+                <button type="submit" class="submit-btn delete-btn-confirm">Ya, Hapus</button>
+            </form>
+        </div>
+    </div>
+</div>

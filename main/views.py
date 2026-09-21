@@ -2,9 +2,9 @@ from django.contrib import messages
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from .forms import ProjectForm
+from .forms import ProjectForm, ArtForm
 
-from main.models import Experience, Project
+from main.models import Experience, Project, Art
 from main.models import Mahasiswa
 
 
@@ -38,8 +38,47 @@ def show_about(request):
     return render(request, "about.html", context)
 
 def show_artfolio(request):
-    context = {}
+    json_response = get_arts_json(request)
+    arts = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    arts = [art.object for art in arts]
+    nama_query = request.GET.get("nama", "").strip()
+    
+    context = {
+        "name": "Muhammad Raihan Al Qadri Kusumaputra",
+        "art_list": arts,
+        "nama_query": nama_query,
+    }
     return render(request, "artfolio.html", context)
+
+def create_art(request):
+    form = ArtForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect("main:show_artfolio")
+        
+    context = {
+        "name": "Muhammad Raihan Al Qadri Kusumaputra",
+        "form": form,
+    }
+    return render(request, "artfolio_form.html", context)
+
+def get_arts_json(request):
+    nama_query = request.GET.get("nama", "").strip()
+    arts = Art.objects.all()
+    if nama_query:
+        arts = arts.filter(nama__icontains=nama_query)
+    
+    arts_json = serializers.serialize("json", arts)
+    return HttpResponse(arts_json, content_type="application/json")
+
+def delete_art(request, art_id):
+    art = get_object_or_404(Art, pk=art_id)
+    if request.method == "POST":
+        art.delete()
+    return redirect("main:show_artfolio")
 
 def show_experience(request):
     context = {

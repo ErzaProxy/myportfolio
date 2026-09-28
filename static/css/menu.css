@@ -96,15 +96,85 @@ input[type="radio"] {
     line-height: 1.2;
 }
 
-.chibi-icon {
+.user-menu-wrapper {
     position: absolute;
-    width: 7.34vw;
-    height: 7.34vw;
+    top: 1.5%;
     right: 4.65%;
-    top: -2%;
-    background: url('/static/img/menu/chibi.svg') no-repeat center/contain;
     z-index: 9999;
-    pointer-events: none;
+    pointer-events: auto;
+}
+
+.user-toggle-checkbox {
+    display: none;
+}
+
+.user-icon {
+    display: block;
+    width: 70px;
+    height: 70px;
+    background: url('/static/img/navbar/user.svg') no-repeat center/contain;
+    cursor: pointer;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 80px;
+    right: 0;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 15px;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.user-toggle-checkbox:checked ~ .user-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-username {
+    font-weight: 800;
+    font-size: 16px;
+    color: #222122;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.dropdown-divider {
+    border: none;
+    border-top: 2px solid #E2E2E2;
+    margin: 5px 0;
+}
+
+.dropdown-item {
+    text-decoration: none;
+    color: #222122;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #E2E2E2;
+}
+
+.logout-text {
+    color: #FF5555;
+}
+
+.logout-text:hover {
+    background-color: #FFE5E5;
 }
 
 .contact-btn {
@@ -261,4 +331,13 @@ input#nav-art:checked ~ .carousel-contents .slide-art-content,
 input#nav-proj:checked ~ .carousel-contents .slide-proj-content {
     opacity: 1;
     visibility: visible;
+}
+
+@media (max-width: 992px){
+    .user-icon {
+    width: 50px;
+    height: 50px;
+    background: url('/static/img/navbar/user.svg') no-repeat center/contain;
+    cursor: pointer;
+}
 }

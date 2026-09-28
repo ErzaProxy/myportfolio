@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block meta %}
-<link rel="stylesheet" href="/static/css/styles.css">
+<link rel="stylesheet" href="/static/css/style.css">
 {% endblock meta %}
 
 {% block title %}{{ name }} - Portfolio{% endblock title %}
@@ -13,6 +13,9 @@
             <span class="fade-text text-1">Welcome</span>
             <span class="fade-text text-2">Selamat Datang</span>
             <span class="fade-text text-3">いらっしゃいませ</span>
+        </div>
+        <div class="last-session-container">
+            <p class="last-session-text">Last Session: {{ last_login }}</p>
         </div>
         <div class="welcome-text-container">
             <span class="portfolio-title">Qodri's Portfolio</span>

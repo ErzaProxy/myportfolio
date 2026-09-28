@@ -5,12 +5,14 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import ProjectForm, ArtForm
-
+import datetime
 from main.models import Experience, Project, Art
 from main.models import Mahasiswa
-
+from django.contrib.auth.decorators import login_required  
+from django.core.exceptions import PermissionDenied        
 
 def show_main(request):
+    last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
     context = {
         "name": "Muhammad Raihan Al Qadri Kusumaputra",
         "npm": "2506602334",
@@ -18,6 +20,7 @@ def show_main(request):
         "bio": (
             "I'm Qodri/Bodrex. An Otaku CS Student that's interested on Game Dev and Data Science, though still has zero understanding about them."
         ),
+        "last_login": last_login,
     }
     return render(request, "index.html", context)
 
@@ -55,6 +58,7 @@ def show_artfolio(request):
     }
     return render(request, "artfolio.html", context)
 
+@login_required(login_url="/login/") 
 def create_art(request):
     form = ArtForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
@@ -140,6 +144,8 @@ def index(request):
     return render(request, 'index.html', context)
 
 def create_project(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
     form = ProjectForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -159,10 +165,15 @@ def get_projects_json(request):
     if nama_query:
         projects = projects.filter(nama__icontains=nama_query)
     
-    projects_json = serializers.serialize("json", projects)
+    projects_json = serializers.serialize(
+    "json", projects, use_natural_foreign_keys=True  # Tambahkan argumen ini
+    )
     return HttpResponse(projects_json, content_type="application/json")
 
+@login_required(login_url="/login/") 
 def delete_project(request, project_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
     project = get_object_or_404(Project, pk=project_id)
 
     if request.method == "POST":
@@ -186,6 +197,21 @@ def edit_project(request, project_id):
     }
     return render(request, "project_form.html", context)
 
+# Tanpa cek is_superuser: semua akun yang sudah login boleh memberi star
+@login_required(login_url="/login/")
+def toggle_star(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+
+    if request.method == "POST":
+        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
+        # Kalau belum, tambahkan star.
+        if request.user in project.starred_by.all():
+            project.starred_by.remove(request.user)
+        else:
+            project.starred_by.add(request.user)
+
+    return redirect("main:show_project")
+
 def register(request):
     form = UserCreationForm(request.POST or None)
 
@@ -204,8 +230,11 @@ def login_user(request):
     form = AuthenticationForm(request, data=request.POST or None)
 
     if request.method == "POST" and form.is_valid():
-        login(request, form.get_user())
-        return redirect("main:show_main")
+        user = form.get_user()
+        login(request, user)
+        response = redirect("main:show_main")
+        response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        return response
 
     context = {
         "name": "Muhammad Raihan Al Qadri Kusumaputra",
@@ -215,4 +244,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect("main:show_main")
+    response = redirect("main:show_main")
+    response.delete_cookie('last_login')
+    return response
+

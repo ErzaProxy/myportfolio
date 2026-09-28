@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<link rel="stylesheet" href="/static/css/proj.css">
+<link rel="stylesheet" href="/static/css/project.css">
 {% endblock meta %}
 
 {% block title %}{{ name }} - Projects{% endblock title %}
@@ -14,7 +14,9 @@
 
 <div class="proj-container">
     <div class="proj-actions-top">
+        {% if user.is_superuser %}
         <a href="{% url 'main:create_project' %}" class="add-proj-btn">+ Tambah Project</a>
+        {% endif %}
         <form method="GET" action="{% url 'main:show_project' %}" class="search-form">
             <input type="search" name="nama" value="{{ nama_query }}" placeholder="Cari nama project..." class="search-input">
             <button type="submit" class="search-btn">Cari</button>
@@ -34,8 +36,11 @@
             
             <div class="proj-details">
                 <div class="proj-header-row">
-                    <h3 class="proj-title">{{ proj.nama }}</h3>
-                    <span class="proj-type-pill">{{ proj.get_tipe_display }}</span>
+                    <div class="proj-title-group">
+                        <h3 class="proj-title">{{ proj.nama }}</h3>
+                        <span class="proj-type-pill">{{ proj.get_tipe_display }}</span>
+                    </div>
+                    {% include "components/project_star.html" with project=proj %}
                 </div>
                 
                 <p class="proj-desc">{{ proj.deskripsi }}</p>
@@ -48,14 +53,19 @@
                         {% if proj.link %}
                         <a href="{{ proj.link }}" target="_blank" rel="noopener noreferrer" class="proj-link-btn">Visit</a>
                         {% endif %}
+                        {% if user.is_superuser %}
                         <a href="{% url 'main:edit_project' proj.id %}" class="edit-project-btn">Edit</a>
                         <button type="button" class="delete-proj-btn" popovertarget="delete-project-{{ proj.id }}">Hapus</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+        {% if user.is_superuser %}
         {% include "components/project_delete_modal.html" with proj=proj %}
+        {% endif %}  
         {% empty %}
+        {% include "components/project_delete_modal.html" with proj=proj %}
         <div class="proj-empty">
             {% if nama_query %}
             <p>Tidak ada project dengan nama tersebut.</p>

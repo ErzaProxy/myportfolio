@@ -342,6 +342,13 @@ body {
         font-size: 28px;
     }
 
+    .proj-title-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
     .proj-footer-row {
         flex-direction: column;
         align-items: flex-start;
@@ -498,6 +505,48 @@ body {
     font-weight: 800;
     cursor: pointer;
     font-family: 'Host Grotesk', sans-serif;
+}
+
+.star-form {
+    display: inline;
+}
+
+.button-star {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #222122;
+    color: #FFFFFF;
+    padding: 8px 16px;
+    border-radius: 25px;
+    border: 2px solid #222122;
+    cursor: pointer;
+    font-family: 'Host Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.button-star:hover {
+    transform: scale(1.05);
+}
+
+.button-star.is-starred {
+    background: #BBDD22;
+    color: #222122;
+    border-color: #222122;
+}
+
+.star-count {
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.button-star.is-starred .star-count {
+    background: rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 992px) {

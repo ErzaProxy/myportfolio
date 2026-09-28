@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<link rel="stylesheet" href="/static/css/me.css">
+<link rel="stylesheet" href="/static/css/menu.css">
 {% endblock meta %}
 {% block title %}{{ name }} - Main Menu{% endblock title %}
 
@@ -26,7 +26,21 @@
         <h1 class="main-title">Main Menu</h1>
     </header>
 
-    <div class="chibi-icon"></div>
+    <div class="user-menu-wrapper">
+        <input type="checkbox" id="user-toggle" class="user-toggle-checkbox">
+            <label for="user-toggle" class="user-icon"></label>
+            <div class="user-dropdown">
+                {% if user.is_authenticated %}
+                    <span class="dropdown-username">Halo, {{ user.username }}!</span>
+                    <hr class="dropdown-divider">
+                    <a href="{% url 'main:logout' %}" class="dropdown-item logout-text">Logout</a>
+                {% else %}
+                    <a href="{% url 'main:login' %}" class="dropdown-item">Login</a>
+                    <a href="{% url 'main:register' %}" class="dropdown-item">Register</a>
+                {% endif %}
+            </div>
+    </div>
+    
     <a href="{% url 'main:show_contact' %}" class="contact-btn"></a>
 
     <div class="carousel-contents">

@@ -60,6 +60,8 @@ def show_artfolio(request):
 
 @login_required(login_url="/login/") 
 def create_art(request):
+    if not request.user.is_superuser: 
+        raise PermissionDenied
     form = ArtForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         form.save()
@@ -80,13 +82,19 @@ def get_arts_json(request):
     arts_json = serializers.serialize("json", arts)
     return HttpResponse(arts_json, content_type="application/json")
 
+@login_required(login_url="/login/") 
 def delete_art(request, art_id):
+    if not request.user.is_superuser: 
+        raise PermissionDenied
     art = get_object_or_404(Art, pk=art_id)
     if request.method == "POST":
         art.delete()
     return redirect("main:show_artfolio")
 
+@login_required(login_url="/login/") 
 def edit_art(request, art_id):
+    if not request.user.has_perm('main.change_art'):
+        raise PermissionDenied
     art = get_object_or_404(Art, pk=art_id)
     form = ArtForm(request.POST or None, instance=art)
 
@@ -143,6 +151,7 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
+@login_required(login_url="/login/") 
 def create_project(request):
     if not request.user.is_superuser:
         raise PermissionDenied
@@ -183,8 +192,11 @@ def delete_project(request, project_id):
 
     return redirect("main:show_project")
 
+@login_required(login_url="/login/") 
 def edit_project(request, project_id):
-    project = get_object_or_404(Art, pk=project_id)
+    if not request.user.has_perm('main.change_project'):
+        raise PermissionDenied
+    project = get_object_or_404(Project, pk=project_id)
     form = ProjectForm(request.POST or None, instance=project)
 
     if request.method == "POST" and form.is_valid():

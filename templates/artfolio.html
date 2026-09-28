@@ -13,7 +13,9 @@
 
 <div class="artfolio-container">
     <div class="art-actions-top">
+        {% if user.is_superuser %}
         <a href="{% url 'main:create_art' %}" class="add-art-btn">+ Tambah Karya</a>
+        {% endif %}
         <form method="GET" action="{% url 'main:show_artfolio' %}" class="search-form">
             <input type="search" name="nama" value="{{ nama_query }}" placeholder="Cari judul karya..." class="search-input">
             <button type="submit" class="search-btn">Cari</button>
@@ -25,20 +27,24 @@
         <div class="art-card">
             <div class="art-image-container">
                 <img src="{{ art.url }}" alt="{{ art.nama }}" class="art-image">
+                {% if perms.main.change_art %}
                 <a href="{% url 'main:edit_art' art.id %}" class="edit-art-btn">Edit</a>
+                {% endif %}
             </div>
-            
             <div class="art-details">
                 <h3 class="art-title">{{ art.nama }}</h3>
                 <p class="art-desc">{{ art.deskripsi }}</p>
-                
                 <div class="art-buttons">
                     <a href="{{ art.url }}" target="_blank" rel="noopener noreferrer" class="art-link-btn">Lihat</a>
+                    {% if user.is_superuser %}
                     <button type="button" class="delete-art-btn" popovertarget="delete-art-{{ art.id }}">Hapus</button>
+                    {% endif %}
                 </div>
             </div>
         </div>
+        {% if user.is_superuser %}
         {% include "components/art_delete_modal.html" with art=art %}
+        {% endif %}
         {% empty %}
         <div class="art-empty">
             {% if nama_query %}

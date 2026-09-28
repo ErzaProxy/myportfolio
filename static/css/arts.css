@@ -235,10 +235,33 @@ body {
 }
 
 .art-image-container {
+    position: relative;
     width: 100%;
-    height: 250px;
+    height: 400px;
     background: #222122;
     border-bottom: 3px solid #FFFFFF;
+}
+
+.edit-art-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #BBDD22;
+    color: #222122;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 14px;
+    border: 2px solid #222122;
+    transition: all 0.2s ease;
+    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.edit-art-btn:hover {
+    background: #222122;
+    color: #BBDD22;
 }
 
 .art-image {

@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -80,6 +82,20 @@ def delete_art(request, art_id):
         art.delete()
     return redirect("main:show_artfolio")
 
+def edit_art(request, art_id):
+    art = get_object_or_404(Art, pk=art_id)
+    form = ArtForm(request.POST or None, instance=art)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect("main:show_artfolio")
+
+    context = {
+        "name": "Muhammad Raihan Al Qadri Kusumaputra",
+        "form": form,
+    }
+    return render(request, "artfolio_form.html", context)
+
 def show_experience(request):
     context = {
         "name": "Muhammad Raihan Al Qadri Kusumaputra",
@@ -155,3 +171,48 @@ def delete_project(request, project_id):
         return redirect("main:show_project")
 
     return redirect("main:show_project")
+
+def edit_project(request, project_id):
+    project = get_object_or_404(Art, pk=project_id)
+    form = ProjectForm(request.POST or None, instance=project)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect("main:show_project")
+
+    context = {
+        "name": "Muhammad Raihan Al Qadri Kusumaputra",
+        "form": form,
+    }
+    return render(request, "project_form.html", context)
+
+def register(request):
+    form = UserCreationForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Akun berhasil dibuat. Silakan login.")
+        return redirect("main:login")
+
+    context = {
+        "name": "Muhammad Raihan Al Qadri Kusumaputra",
+        "form": form,
+    }
+    return render(request, "register.html", context)
+
+def login_user(request):
+    form = AuthenticationForm(request, data=request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        login(request, form.get_user())
+        return redirect("main:show_main")
+
+    context = {
+        "name": "Muhammad Raihan Al Qadri Kusumaputra",
+        "form": form,
+    }
+    return render(request, "login.html", context)
+
+def logout_user(request):
+    logout(request)
+    return redirect("main:show_main")

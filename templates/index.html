@@ -17,8 +17,11 @@
         <div class="welcome-text-container">
             <span class="portfolio-title">Qodri's Portfolio</span>
         </div>
-
+        {% if user.is_authenticated %}
         <a href="{% url 'main:show_menu' %}" class="start-btn">START</a>
+        {% else %}
+        <a href="{% url 'main:register' %}" class="start-btn">START</a>
+        {% endif %}
     </div>
 </main>
 {% endblock layout %}

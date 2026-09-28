@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<link rel="stylesheet" href="/static/css/proje.css">
+<link rel="stylesheet" href="/static/css/proj.css">
 {% endblock meta %}
 
 {% block title %}{{ name }} - Projects{% endblock title %}
@@ -48,6 +48,7 @@
                         {% if proj.link %}
                         <a href="{{ proj.link }}" target="_blank" rel="noopener noreferrer" class="proj-link-btn">Visit</a>
                         {% endif %}
+                        <a href="{% url 'main:edit_project' proj.id %}" class="edit-project-btn">Edit</a>
                         <button type="button" class="delete-proj-btn" popovertarget="delete-project-{{ proj.id }}">Hapus</button>
                     </div>
                 </div>

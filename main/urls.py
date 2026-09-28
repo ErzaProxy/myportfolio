@@ -14,7 +14,13 @@ urlpatterns = [
     path("project/add/", create_project, name="create_project"),
     path("api/project/", get_projects_json, name="get_projects_json"),
     path("project/<uuid:project_id>/delete/",delete_project,name="delete_project"),
+    path("project/<uuid:project_id>/edit/", edit_project, name="edit_project"),
     path("artfolio/add/", create_art, name="create_art"),
     path("api/artfolio/", get_arts_json, name="get_arts_json"),
     path("artfolio/<uuid:art_id>/delete/", delete_art, name="delete_art"),
+    path("artfolio/<uuid:art_id>/edit/", edit_art, name="edit_art"),
+    path("register/", register, name="register"),
+    path("login/", login_user, name="login"),
+    path("logout/", logout_user, name="logout"),
+    
 ]

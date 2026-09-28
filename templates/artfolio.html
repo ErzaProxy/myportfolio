@@ -25,6 +25,7 @@
         <div class="art-card">
             <div class="art-image-container">
                 <img src="{{ art.url }}" alt="{{ art.nama }}" class="art-image">
+                <a href="{% url 'main:edit_art' art.id %}" class="edit-art-btn">Edit</a>
             </div>
             
             <div class="art-details">

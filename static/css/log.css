@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #333333;
+    background-image: url('/static/img/about/background.svg');
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: repeat;
+    background-spacing: -10px;
+    font-family: 'Host Grotesk', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+

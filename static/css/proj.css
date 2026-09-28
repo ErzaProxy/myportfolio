@@ -268,6 +268,23 @@ body {
     border-color: #222122;
 }
 
+.edit-project-btn {
+    background: #BBDD22;
+    color: #222122;
+    padding: 12px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.edit-project-btn:hover {
+    background: #222122;
+    color: #BBDD22;
+}
+
 .proj-empty {
     font-size: 24px;
     color: #FFFFFF;

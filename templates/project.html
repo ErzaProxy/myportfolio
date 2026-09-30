@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<link rel="stylesheet" href="/static/css/project.css">
+<link rel="stylesheet" href="/static/css/proj.css">
 {% endblock meta %}
 
 {% block title %}{{ name }} - Projects{% endblock title %}
@@ -13,69 +13,268 @@
 </header>
 
 <div class="proj-container">
+    <!-- BARIS ATAS: Tombol Tambah & Form Pencarian -->
     <div class="proj-actions-top">
         {% if user.is_superuser %}
-        <a href="{% url 'main:create_project' %}" class="add-proj-btn">+ Tambah Project</a>
+        <button type="button" class="add-proj-btn" popovertarget="add-project-modal">
+            <span aria-hidden="true">+</span> Tambah Project
+        </button>
         {% endif %}
-        <form method="GET" action="{% url 'main:show_project' %}" class="search-form">
-            <input type="search" name="nama" value="{{ nama_query }}" placeholder="Cari nama project..." class="search-input">
+
+        <form id="project-search-form" class="search-form">
+            <input type="search" id="search-input" name="nama" value="{{ nama_query }}" placeholder="Cari nama project..." class="search-input">
             <button type="submit" class="search-btn">Cari</button>
         </form>
     </div>
 
-    <div class="proj-list">
-        {% for proj in project_list %}
-        <div class="proj-card">
+    <!-- STATE: Loading -->
+    <div id="loading" class="proj-empty hide">
+        <p>Memuat projects...</p>
+    </div>
+    
+    <!-- STATE: Error -->
+    <div id="error" class="proj-empty hide">
+        <p>Gagal memuat data projects. Silakan coba lagi.</p>
+    </div>
+    
+    <!-- STATE: Empty (Kosong) -->
+    <div id="empty" class="proj-empty hide">
+        <p>Belum ada project yang ditambahkan atau ditemukan.</p>
+    </div>
+
+    <!-- WADAH GRID PROYEK (Akan diisi otomatis oleh JavaScript) -->
+    <div id="grid" class="proj-list hide"></div>
+
+    {% if user.is_superuser %}
+        {% include "components/project_form_modal.html" %}
+    {% endif %}
+</div>
+
+<script>
+    // 1. Konfigurasi Endpoint & Hak Akses
+    const BASE_PROJECTS_ENDPOINT = "{% url 'main:get_projects_json' %}";
+    const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}"; // AJAX Tambah Project
+    const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+    const HAS_CHANGE_PERM = "{{ perms.main.change_project|yesno:'true,false' }}" === "true";
+    let projectsAbortController;
+
+    // 2. Mengambil Elemen DOM
+    const loadingState = document.getElementById('loading');
+    const errorState = document.getElementById('error');
+    const emptyState = document.getElementById('empty');
+    const gridContainer = document.getElementById('grid');
+    const searchForm = document.getElementById('project-search-form');
+    const searchInput = document.getElementById('search-input');
+    const projectForm = document.getElementById('project-form'); // Elemen Form Tambah Project
+
+    // 3. Fungsi Keamanan untuk mencegah XSS di Client-Side
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+
+    // 4. Fungsi Mengatur Tampilan State
+    function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+        loadingState.classList.toggle('hide', !showLoading);
+        errorState.classList.toggle('hide', !showError);
+        emptyState.classList.toggle('hide', !showEmpty);
+        gridContainer.classList.toggle('hide', !showGrid);
+    }
+
+    // Menutup modal via JavaScript
+    function closeProjectModal() {
+        const modal = document.getElementById("add-project-modal");
+        if (modal) modal.hidePopover();
+    }
+
+    // Membaca cookie untuk mengambil token CSRF (Wajib untuk request POST Django)
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // 5. Fungsi Merakit Card HTML (Sesuai dengan CSS-mu)
+    function buildProjectCardElement(item) {
+        const project = item.fields;
+        const projectId = item.pk;
+        
+        const cardElement = document.createElement('div');
+        cardElement.className = 'proj-card';
+
+        const imageHtml = project.thumbnail
+            ? `<img src="${escapeHtml(project.thumbnail)}" alt="${escapeHtml(project.nama)}" class="proj-thumbnail">`
+            : `<div class="proj-placeholder">No Image</div>`;
+
+        const urlHtml = project.link
+            ? `<a href="${escapeHtml(project.link)}" target="_blank" rel="noopener noreferrer" class="proj-link-btn">Visit</a>`
+            : '';
+
+        const editUrl = "{% url 'main:edit_project' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', projectId);
+        const editHtml = HAS_CHANGE_PERM
+            ? `<a href="${editUrl}" class="edit-project-btn">Edit</a>`
+            : '';
+
+        const deleteUrl = "{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', projectId);
+        const deleteHtml = IS_SUPERUSER
+            ? `<form method="post" action="${deleteUrl}" style="display:inline;">
+                 {% csrf_token %}
+                 <button type="submit" class="delete-proj-btn" onclick="return confirm('Yakin ingin menghapus project ini?');">Hapus</button>
+               </form>`
+            : '';
+
+        const starUrl = "{% url 'main:toggle_star' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', projectId);
+        const isStarredClass = project.is_starred ? " is-starred" : "";
+        const starText = project.is_starred ? "Unstar" : "Star";
+        const starTitle = project.star_count > 0 ? `Dibintangi oleh ${escapeHtml(project.starred_by_names)}` : "Jadilah yang pertama memberi star";
+
+        const completeCardHtml = `
             <div class="proj-image-container">
-                {% if proj.thumbnail %}
-                <img src="{{ proj.thumbnail }}" alt="{{ proj.nama }}" class="proj-thumbnail">
-                {% else %}
-                <div class="proj-placeholder">No Image</div>
-                {% endif %}
+                ${imageHtml}
             </div>
             
             <div class="proj-details">
                 <div class="proj-header-row">
                     <div class="proj-title-group">
-                        <h3 class="proj-title">{{ proj.nama }}</h3>
-                        <span class="proj-type-pill">{{ proj.get_tipe_display }}</span>
+                        <h3 class="proj-title">${escapeHtml(project.nama)}</h3>
+                        <span class="proj-type-pill">${escapeHtml(project.tipe_display)}</span>
                     </div>
-                    {% include "components/project_star.html" with project=proj %}
+                    <form method="post" action="${starUrl}" class="star-form">
+                        {% csrf_token %}
+                        <button type="submit" class="button-star${isStarredClass}" title="${starTitle}">
+                            <span aria-hidden="true">★</span> ${starText} <span class="star-count">${project.star_count}</span>
+                        </button>
+                    </form>
                 </div>
                 
-                <p class="proj-desc">{{ proj.deskripsi }}</p>
+                <p class="proj-desc">${escapeHtml(project.deskripsi)}</p>
                 
                 <div class="proj-footer-row">
                     <div class="proj-skills">
-                        <span class="skill-label">Skills:</span> {{ proj.skillset }}
+                        <span class="skill-label">Skills:</span> ${escapeHtml(project.skillset)}
                     </div>
                     <div class="proj-buttons">
-                        {% if proj.link %}
-                        <a href="{{ proj.link }}" target="_blank" rel="noopener noreferrer" class="proj-link-btn">Visit</a>
-                        {% endif %}
-                        {% if perms.main.change_project %}
-                        <a href="{% url 'main:edit_project' proj.id %}" class="edit-project-btn">Edit</a>
-                        {% endif %}
-                        {% if user.is_superuser %}
-                        <button type="button" class="delete-proj-btn" popovertarget="delete-project-{{ proj.id }}">Hapus</button>
-                        {% endif %}
+                        ${urlHtml}
+                        ${editHtml}
+                        ${deleteHtml}
                     </div>
                 </div>
             </div>
-        </div>
-        {% if user.is_superuser %}
-        {% include "components/project_delete_modal.html" with proj=proj %}
-        {% endif %}  
-        {% empty %}
-        {% include "components/project_delete_modal.html" with proj=proj %}
-        <div class="proj-empty">
-            {% if nama_query %}
-            <p>Tidak ada project dengan nama tersebut.</p>
-            {% else %}
-            <p>Belum ada project yang ditambahkan.</p>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
-</div>
+        `;
+        
+        cardElement.innerHTML = completeCardHtml;
+        return cardElement;
+    }
+
+    // 6. Fungsi Utama Fetching Data ke Server
+    async function fetchProjects(searchQuery = "") {
+        if (projectsAbortController) projectsAbortController.abort();
+        projectsAbortController = new AbortController();
+
+        try {
+            displayPageSection({ showLoading: true });
+            const url = searchQuery ? `${BASE_PROJECTS_ENDPOINT}?nama=${encodeURIComponent(searchQuery)}` : BASE_PROJECTS_ENDPOINT;
+            
+            const response = await fetch(url, {
+                headers: { 'Accept': 'application/json' },
+                signal: projectsAbortController.signal,
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch data');
+            const projectData = await response.json();
+
+            if (projectData.length === 0) {
+                displayPageSection({ showEmpty: true });
+            } else {
+                gridContainer.innerHTML = '';
+                projectData.forEach(item => {
+                    gridContainer.appendChild(buildProjectCardElement(item));
+                });
+                displayPageSection({ showGrid: true });
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') return; 
+            console.error('Error loading projects:', error);
+            displayPageSection({ showError: true });
+        }
+    }
+
+    // 7. Pengiriman Form Tambah Project dengan AJAX
+    async function addProject(event) {
+        event.preventDefault(); // Cegah reload halaman
+        const submitButton = projectForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true; // Nonaktifkan tombol agar tidak double-submit
+
+        try {
+            const response = await fetch(CREATE_PROJECT_ENDPOINT, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: new FormData(projectForm),
+            });
+            
+            const result = await response.json().catch(() => ({}));
+            
+            if (response.ok) {
+                projectForm.reset();
+                closeProjectModal();
+                showToast('Berhasil', 'Project baru berhasil ditambahkan!', 'success');
+                // Refresh daftar project otomatis sesuai dengan kata kunci di pencarian
+                fetchProjects(searchInput.value.trim());
+            } else {
+                // Menyatukan seluruh pesan error dari validasi backend form
+                const errorMessages = result.errors 
+                    ? Object.values(result.errors).flat().map(error => error.message) 
+                    : [result.message || `Terjadi kesalahan (status ${response.status}).`];
+                showToast('Gagal menambahkan project', errorMessages.join(' '), 'error');
+            }
+        } catch (error) {
+            console.error('Error adding project:', error);
+            showToast('Gagal', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+        } finally {
+            submitButton.disabled = false; // Aktifkan tombol kembali
+        }
+    }
+
+    // Pasang Event Listener ke form modal (jika superuser, form ini akan ada di DOM)
+    if (projectForm) {
+        projectForm.addEventListener('submit', addProject);
+    }
+
+    // 8. Search Debouncing
+    const SEARCH_DEBOUNCE_DELAY = 300;
+    let searchDebounceTimer;
+
+    function searchProjects() {
+        fetchProjects(searchInput.value.trim());
+    }
+
+    searchInput.addEventListener("input", function() {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(function() {
+            searchProjects();
+        }, SEARCH_DEBOUNCE_DELAY);
+    });
+
+    searchForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        clearTimeout(searchDebounceTimer);
+        searchProjects();
+    });
+
+    // Jalankan load data saat halaman dibuka
+    fetchProjects(searchInput.value.trim());
+</script>
 {% endblock content %}

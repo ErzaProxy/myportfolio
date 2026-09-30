@@ -9,7 +9,9 @@ import datetime
 from main.models import Experience, Project, Art
 from main.models import Mahasiswa
 from django.contrib.auth.decorators import login_required  
-from django.core.exceptions import PermissionDenied        
+from django.core.exceptions import PermissionDenied  
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 def show_main(request):
     last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
@@ -116,21 +118,47 @@ def show_experience(request):
     return render(request, "experience.html", context)
 
 def show_project(request):
-    json_response = get_projects_json(request)
-
-    projects = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    projects = [project.object for project in projects]
     nama_query = request.GET.get("nama", "").strip()
     
     context = {
         "name": "Muhammad Raihan Al Qadri Kusumaputra",
-        "project_list": projects,
-        "nama_query": nama_query,   
+        "nama_query": nama_query,
+        "form": ProjectForm(), # Ditambahkan untuk modal tambah proyek nanti
     }
     return render(request, "project.html", context)
+
+def get_projects_json(request):
+    nama_query = request.GET.get("nama", "").strip()
+    # Mengambil data dengan prefetch_related untuk optimasi query
+    projects = Project.objects.prefetch_related('starred_by').all()
+    if nama_query:
+        projects = projects.filter(nama__icontains=nama_query)
+    
+    # Konstruksi data JSON secara manual
+    data = []
+    for project in projects:
+        starred_users = project.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+        
+        # Mengambil label/display dari choices Tipe
+        tipe_display = dict(Project.PROJECT_TYPES).get(project.tipe, project.tipe)
+        
+        data.append({
+            "pk": str(project.id),
+            "fields": {
+                "nama": project.nama,
+                "tipe_display": tipe_display,
+                "deskripsi": project.deskripsi,
+                "thumbnail": project.thumbnail,
+                "link": project.link,
+                "skillset": project.skillset,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+    return JsonResponse(data, safe=False)
 
 def show_contact(request):
     context = {
@@ -167,17 +195,6 @@ def create_project(request):
         "form": form,
     }
     return render(request, "project_form.html", context)
-
-def get_projects_json(request):
-    nama_query = request.GET.get("nama", "").strip()
-    projects = Project.objects.all()
-    if nama_query:
-        projects = projects.filter(nama__icontains=nama_query)
-    
-    projects_json = serializers.serialize(
-    "json", projects, use_natural_foreign_keys=True  # Tambahkan argumen ini
-    )
-    return HttpResponse(projects_json, content_type="application/json")
 
 @login_required(login_url="/login/") 
 def delete_project(request, project_id):
@@ -260,3 +277,23 @@ def logout_user(request):
     response.delete_cookie('last_login')
     return response
 
+@require_POST
+def create_project_ajax(request):
+    # Cek hak akses: hanya superuser yang boleh menambah data
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan proyek."},
+            status=403,
+        )
+    
+    # Gunakan ProjectForm yang sudah ada untuk memvalidasi input
+    form = ProjectForm(request.POST)
+    if form.is_valid():
+        project = form.save()
+        return JsonResponse(
+            {"message": "Project berhasil ditambahkan.", "pk": str(project.id)},
+            status=201,
+        )
+    
+    # Jika tidak valid, kembalikan daftar error dari form
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)

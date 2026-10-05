@@ -417,6 +417,96 @@ body {
     font-family: 'Host Grotesk', sans-serif;
 }
 
+.hide {
+    display: none !important;
+}
+
+.art-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.art-title-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.love-form {
+    display: inline;
+}
+.button-love {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #222122;
+    color: #FFFFFF;
+    padding: 8px 16px;
+    border-radius: 25px;
+    border: 2px solid #222122;
+    cursor: pointer;
+    font-family: 'Host Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+.button-love:hover {
+    transform: scale(1.05);
+}
+.button-love.is-loved {
+    background: #FF5555;
+    color: #FFFFFF;
+    border-color: #FF5555;
+}
+.love-count {
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+.button-love.is-loved .love-count {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.project-form-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: transparent;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+.project-form-modal:popover-open { display: flex; }
+.project-form-modal__backdrop {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0; background: rgba(0, 0, 0, 0.6); cursor: default;
+}
+.project-form-modal__content {
+    position: relative; z-index: 1; width: min(100%, 640px); max-height: calc(100vh - 2rem); overflow-y: auto; padding: 2rem; background: #FCDFB3; border: 3px solid #FFFFFF; border-radius: 39px; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+.project-form-modal__content h2 {
+    margin: 0 2.5rem 1.25rem 0; font-family: 'Host Grotesk', sans-serif; font-size: 28px; font-weight: 800; color: #222122;
+}
+.project-form-modal__close {
+    position: absolute; top: 1.5rem; right: 1.5rem; border: 0; padding: 0; background: transparent; color: #222122; font-size: 2rem; line-height: 1; cursor: pointer; font-weight: 800;
+}
+.project-form-modal__actions {
+    display: flex; justify-content: flex-end; gap: 15px; margin-top: 1.5rem;
+}
+.form-group { margin-bottom: 20px; text-align: left; }
+.form-group label { display: block; font-size: 18px; font-weight: 800; color: #222122; margin-bottom: 8px; }
+.form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 12px 15px; border: 2px solid #222122; border-radius: 12px; font-family: 'Host Grotesk', sans-serif; font-size: 16px; background: #FFFFFF; box-sizing: border-box;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #BBDD22; }
+
 /* ============================== */
 /* RESPONSIVE UNTUK MOBILE/TABLET */
 /* ============================== */

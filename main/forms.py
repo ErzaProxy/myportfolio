@@ -72,33 +72,23 @@ class ProjectForm(ModelForm):
 class ArtForm(ModelForm):
     class Meta:
         model = Art
-        fields = [
-            "nama",
-            "deskripsi",
-            "url",
-        ]
+        fields = ["nama", "deskripsi", "url"]
         labels = {
             "nama": "Judul Karya",
             "deskripsi": "Deskripsi",
             "url": "URL Gambar",
         }
         widgets = {
-            "nama": TextInput(
-                attrs={
-                    "placeholder": "Masukkan judul art",
-                    "maxlength": 255,
-                }
-            ),
-            "deskripsi": Textarea(
-                attrs={
-                    "placeholder": "Deskripsikan art ini",
-                    "rows": 4,
-                }
-            ),
-            "url": URLInput(
-                attrs={
-                    "placeholder": "https://...",
-                }
-            ),
+            "nama": TextInput(attrs={"placeholder": "Masukkan judul art", "maxlength": 255}),
+            "deskripsi": Textarea(attrs={"placeholder": "Deskripsikan art ini", "rows": 4}),
+            "url": URLInput(attrs={"placeholder": "https://..."}),
         }
-        
+
+    def clean_nama(self):
+        nama = strip_tags(self.cleaned_data["nama"]).strip()
+        if not nama:
+            raise ValidationError("Judul karya tidak boleh hanya berisi tag HTML.")
+        return nama
+
+    def clean_deskripsi(self):
+        return strip_tags(self.cleaned_data["deskripsi"]).strip()

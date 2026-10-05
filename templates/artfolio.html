@@ -3,10 +3,11 @@
 {{ name }} - Artfolio
 {%endblock title%}
 {%block meta%}
-<link rel="stylesheet" href="/static/css/arts.css">
+<link rel="stylesheet" href="/static/css/artfolio.css">
 {%endblock meta%}
+
 {%block content%}
-   <header class="menu-header">
+<header class="menu-header">
     <a href="{% url 'main:show_menu' %}" class="back-btn"></a>
     <h1 class="main-title">Artfolio.</h1>
 </header>
@@ -14,46 +15,203 @@
 <div class="artfolio-container">
     <div class="art-actions-top">
         {% if user.is_superuser %}
-        <a href="{% url 'main:create_art' %}" class="add-art-btn">+ Tambah Karya</a>
+        <button type="button" class="add-art-btn" popovertarget="add-art-modal">
+            <span aria-hidden="true">+</span> Tambah Karya
+        </button>
         {% endif %}
-        <form method="GET" action="{% url 'main:show_artfolio' %}" class="search-form">
-            <input type="search" name="nama" value="{{ nama_query }}" placeholder="Cari judul karya..." class="search-input">
+        
+        <form id="art-search-form" class="search-form">
+            <input type="search" id="search-input" name="nama" value="{{ nama_query }}" placeholder="Cari judul karya..." class="search-input">
             <button type="submit" class="search-btn">Cari</button>
         </form>
     </div>
 
-    <div class="art-grid">
-        {% for art in art_list %}
-        <div class="art-card">
-            <div class="art-image-container">
-                <img src="{{ art.url }}" alt="{{ art.nama }}" class="art-image">
-                {% if perms.main.change_art %}
-                <a href="{% url 'main:edit_art' art.id %}" class="edit-art-btn">Edit</a>
-                {% endif %}
-            </div>
-            <div class="art-details">
-                <h3 class="art-title">{{ art.nama }}</h3>
-                <p class="art-desc">{{ art.deskripsi }}</p>
-                <div class="art-buttons">
-                    <a href="{{ art.url }}" target="_blank" rel="noopener noreferrer" class="art-link-btn">Lihat</a>
-                    {% if user.is_superuser %}
-                    <button type="button" class="delete-art-btn" popovertarget="delete-art-{{ art.id }}">Hapus</button>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        {% if user.is_superuser %}
-        {% include "components/art_delete_modal.html" with art=art %}
-        {% endif %}
-        {% empty %}
-        <div class="art-empty">
-            {% if nama_query %}
-            <p>Tidak ada karya dengan nama tersebut.</p>
-            {% else %}
-            <p>Belum ada karya yang diunggah.</p>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
+    <div id="loading" class="art-empty hide"><p>Memuat artfolio...</p></div>
+    <div id="error" class="art-empty hide"><p>Gagal memuat data. Silakan coba lagi.</p></div>
+    <div id="empty" class="art-empty hide"><p>Belum ada karya yang ditambahkan atau ditemukan.</p></div>
+    <div id="grid" class="art-grid hide"></div>
+
+    {% if user.is_superuser %}
+        {% include "components/art_form_modal.html" %}
+    {% endif %}
 </div>
+
+<script>
+    const BASE_ARTS_ENDPOINT = "{% url 'main:get_arts_json' %}";
+    const CREATE_ART_ENDPOINT = "{% url 'main:create_art_ajax' %}";
+    const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+    const HAS_CHANGE_PERM = "{{ perms.main.change_art|yesno:'true,false' }}" === "true";
+    let artsAbortController;
+
+    const loadingState = document.getElementById('loading');
+    const errorState = document.getElementById('error');
+    const emptyState = document.getElementById('empty');
+    const gridContainer = document.getElementById('grid');
+    const searchForm = document.getElementById('art-search-form');
+    const searchInput = document.getElementById('search-input');
+    const artForm = document.getElementById('art-form');
+
+    function escapeHtml(value) {
+        return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+    }
+
+    function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+        loadingState.classList.toggle('hide', !showLoading);
+        errorState.classList.toggle('hide', !showError);
+        emptyState.classList.toggle('hide', !showEmpty);
+        gridContainer.classList.toggle('hide', !showGrid);
+    }
+
+    function closeArtModal() {
+        const modal = document.getElementById("add-art-modal");
+        if (modal) modal.hidePopover();
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function buildArtCardElement(item) {
+        const art = item.fields;
+        const artId = item.pk;
+        const cardElement = document.createElement('div');
+        cardElement.className = 'art-card';
+
+        const imageHtml = `<img src="${escapeHtml(art.url)}" alt="${escapeHtml(art.nama)}" class="art-image">`;
+        
+        const editUrl = "{% url 'main:edit_art' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', artId);
+        const editHtml = HAS_CHANGE_PERM ? `<a href="${editUrl}" class="edit-art-btn">Edit</a>` : '';
+
+        const deleteUrl = "{% url 'main:delete_art' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', artId);
+        const deleteHtml = IS_SUPERUSER ? 
+            `<form method="post" action="${deleteUrl}" style="display:inline; width: 100%;">
+                 {% csrf_token %}
+                 <button type="submit" class="delete-art-btn" style="width: 100%;" onclick="return confirm('Yakin ingin menghapus karya ini?');">Hapus</button>
+             </form>` : '';
+
+        const loveUrl = "{% url 'main:toggle_love' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', artId);
+        const isLovedClass = art.is_loved ? " is-loved" : "";
+        const loveText = art.is_loved ? "Unlove" : "Love";
+        const loveTitle = art.love_count > 0 ? `Disukai oleh ${escapeHtml(art.loved_by_names)}` : "Jadilah yang pertama menyukai karya ini";
+
+        const completeCardHtml = `
+            <div class="art-image-container">
+                ${imageHtml}
+                ${editHtml}
+            </div>
+            
+            <div class="art-details">
+                <div class="art-header-row">
+                    <div class="art-title-group">
+                        <h3 class="art-title" style="margin: 0;">${escapeHtml(art.nama)}</h3>
+                    </div>
+                    <form method="post" action="${loveUrl}" class="love-form">
+                        {% csrf_token %}
+                        <button type="submit" class="button-love${isLovedClass}" title="${loveTitle}">
+                            <span aria-hidden="true">❤</span> ${loveText} <span class="love-count">${art.love_count}</span>
+                        </button>
+                    </form>
+                </div>
+
+                <p class="art-desc">${escapeHtml(art.deskripsi)}</p>
+                
+                <div class="art-buttons">
+                    <a href="${escapeHtml(art.url)}" target="_blank" rel="noopener noreferrer" class="art-link-btn">Lihat</a>
+                </div>
+                ${deleteHtml ? `<div style="margin-top: 10px;">${deleteHtml}</div>` : ''}
+            </div>
+        `;
+        
+        cardElement.innerHTML = completeCardHtml;
+        return cardElement;
+    }
+
+    async function fetchArts(searchQuery = "") {
+        if (artsAbortController) artsAbortController.abort();
+        artsAbortController = new AbortController();
+
+        try {
+            displayPageSection({ showLoading: true });
+            const url = searchQuery ? `${BASE_ARTS_ENDPOINT}?nama=${encodeURIComponent(searchQuery)}` : BASE_ARTS_ENDPOINT;
+            
+            const response = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: artsAbortController.signal });
+            if (!response.ok) throw new Error('Failed to fetch data');
+            
+            const artData = await response.json();
+
+            if (artData.length === 0) {
+                displayPageSection({ showEmpty: true });
+            } else {
+                gridContainer.innerHTML = '';
+                artData.forEach(item => gridContainer.appendChild(buildArtCardElement(item)));
+                displayPageSection({ showGrid: true });
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') return; 
+            console.error('Error loading arts:', error);
+            displayPageSection({ showError: true });
+        }
+    }
+
+    async function addArt(event) {
+        event.preventDefault();
+        const submitButton = artForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
+        try {
+            const response = await fetch(CREATE_ART_ENDPOINT, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                body: new FormData(artForm),
+            });
+            const result = await response.json().catch(() => ({}));
+            
+            if (response.ok) {
+                artForm.reset();
+                closeArtModal();
+                showToast('Berhasil', 'Karya baru berhasil ditambahkan!', 'success');
+                fetchArts(searchInput.value.trim());
+            } else {
+                const errorMessages = result.errors 
+                    ? Object.values(result.errors).flat().map(error => error.message) 
+                    : [result.message || `Terjadi kesalahan (status ${response.status}).`];
+                showToast('Gagal menambahkan karya', errorMessages.join(' '), 'error');
+            }
+        } catch (error) {
+            console.error('Error adding art:', error);
+            showToast('Gagal', 'Tidak dapat terhubung ke server.', 'error');
+        } finally {
+            submitButton.disabled = false;
+        }
+    }
+
+    if (artForm) artForm.addEventListener('submit', addArt);
+
+    const SEARCH_DEBOUNCE_DELAY = 300;
+    let searchDebounceTimer;
+    function searchArts() { fetchArts(searchInput.value.trim()); }
+
+    searchInput.addEventListener("input", function() {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(searchArts, SEARCH_DEBOUNCE_DELAY);
+    });
+    searchForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        clearTimeout(searchDebounceTimer);
+        searchArts();
+    });
+
+    fetchArts(searchInput.value.trim());
+</script>
 {%endblock content%}

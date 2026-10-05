@@ -45,17 +45,10 @@ def show_about(request):
     return render(request, "about.html", context)
 
 def show_artfolio(request):
-    json_response = get_arts_json(request)
-    arts = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    arts = [art.object for art in arts]
     nama_query = request.GET.get("nama", "").strip()
-    
     context = {
         "name": "Muhammad Raihan Al Qadri Kusumaputra",
-        "art_list": arts,
+        "form": ArtForm(),
         "nama_query": nama_query,
     }
     return render(request, "artfolio.html", context)
@@ -75,14 +68,42 @@ def create_art(request):
     }
     return render(request, "artfolio_form.html", context)
 
+@require_POST
+def create_art_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse({"message": "Hanya Admin portofolio yang dapat menambahkan karya."}, status=403)
+    
+    form = ArtForm(request.POST)
+    if form.is_valid():
+        art = form.save()
+        return JsonResponse({"message": "Karya berhasil ditambahkan.", "pk": str(art.id)}, status=201)
+    
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
 def get_arts_json(request):
     nama_query = request.GET.get("nama", "").strip()
-    arts = Art.objects.all()
+    arts = Art.objects.prefetch_related('loved_by').all()
     if nama_query:
         arts = arts.filter(nama__icontains=nama_query)
     
-    arts_json = serializers.serialize("json", arts)
-    return HttpResponse(arts_json, content_type="application/json")
+    data = []
+    for art in arts:
+        loved_users = art.loved_by.all()
+        is_loved = request.user in loved_users if request.user.is_authenticated else False
+        loved_by_names = ", ".join([u.username for u in loved_users])
+        
+        data.append({
+            "pk": str(art.id),
+            "fields": {
+                "nama": art.nama,
+                "deskripsi": art.deskripsi,
+                "url": art.url,
+                "love_count": loved_users.count(),
+                "is_loved": is_loved,
+                "loved_by_names": loved_by_names,
+            }
+        })
+    return JsonResponse(data, safe=False)
 
 @login_required(login_url="/login/") 
 def delete_art(request, art_id):
@@ -240,6 +261,16 @@ def toggle_star(request, project_id):
             project.starred_by.add(request.user)
 
     return redirect("main:show_project")
+
+@login_required(login_url="/login/")
+def toggle_love(request, art_id):
+    art = get_object_or_404(Art, pk=art_id)
+    if request.method == "POST":
+        if request.user in art.loved_by.all():
+            art.loved_by.remove(request.user)
+        else:
+            art.loved_by.add(request.user)
+    return redirect("main:show_artfolio")
 
 def register(request):
     form = UserCreationForm(request.POST or None)

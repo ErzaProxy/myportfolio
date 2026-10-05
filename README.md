@@ -58,3 +58,11 @@ v0.4.1:
 -Bagaimana cara mengadaptasi Tutorial 4 ke kode saya, dan juga bagaimana cara membuat editor 
 
 Melakukan pembuatan sistem autentikasi dengan 3 role yaitu admin, editor, user dengan implementasi cookie dan session, permission, etc.
+
+v0.5.1:
+- Membantu mengerjakan Tutorial 5, khususnya mengadaptasi contoh kode dari panduan tutorial agar sesuai dengan struktur HTML dan CSS kustom pada proyekku.
+- Bantu mengimplementasikan fitur-fitur AJAX, popover modal, dan perlindungan XSS dari halaman Project ke halaman Artfolio dan model Art, termasuk merombak logika star button menjadi love button.
+
+1. Debouncing adalah teknik penundaan eksekusi sebuah fungsi hingga ada jeda waktu tertentu tanpa adanya event atau input baru dari pengguna. Pada fitur pencarian AJAX, teknik ini sangat penting untuk mencegah browser membebani server dengan mengirimkan request berulang-ulang setiap kali pengguna mengetik satu huruf, sehingga pencarian baru akan benar-benar dikirim hanya setelah pengguna selesai mengetik atau berhenti sejenak.
+2. Penggunaan await pada fetch() berfungsi untuk menjeda atau "menunggu" proses pengiriman datasampai selesai diproses dan mendapatkan response dari server sebelum aplikasi melanjutkan ke baris kode berikutnya. Jika kita tidak menggunakan await, proses fetch akan tetap berjalan secara asinkronus di belakang layar, dan program akan langsung mengeksekusi kode selanjutnya tanpa menunggu datanya tersedia, yang biasanya akan menyebabkan error.
+3. Cross-Site Scripting (XSS) adalah serangan ketika seseorang berhasil menyisipkan skrip atau kode JavaScript berbahaya miliknya ke dalam aplikasi web kita, yang kemudian tanpa sengaja dieksekusi oleh browser pengunjung lain. Data yang dirender melalui AJAX lebih rentan karena browser akan langsung menganggap data mentah tersebut sebagai tag HTML atau kode sungguhan, berbeda dengan template bawaan Django yang secara otomatis melakukan auto-escaping untuk mengubah karakter khusus menjadi teks biasa yang aman sebelum ditampilkan ke pengguna.

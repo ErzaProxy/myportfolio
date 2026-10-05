@@ -31,6 +31,9 @@ class Art(models.Model):
     nama = models.CharField(max_length=255)
     deskripsi = models.TextField()
     url = models.URLField()
+    loved_by = models.ManyToManyField(
+        User, related_name="loved_arts", blank=True
+    )
 
     def __str__(self):
         return self.nama

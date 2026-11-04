@@ -1,0 +1,1164 @@
+<title>OS Quiz Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#EDF0F3; --surface:#FFFFFF; --ink:#131B24; --muted:#56636F; --rule:#D2D9E1;
+  --accent:#1B58C9; --accent-ink:#FFFFFF; --accent-soft:#E1EAF9;
+  --warn:#8F5400; --warn-soft:#FAEFD9; --warn-rule:#E7C88F;
+  --code-bg:#F4F6F9; --code-ink:#1B2530; --kw:#1B58C9; --str:#8F5400; --cm:#6D7A86;
+  --state-new:#6B7785; --state-ready:#1B58C9; --state-run:#1E7A4C; --state-wait:#8F5400; --state-term:#9B2C2C;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F141A; --surface:#161D25; --ink:#E3E8ED; --muted:#98A5B2; --rule:#29333E;
+    --accent:#86AAFF; --accent-ink:#0F141A; --accent-soft:#1C2A44;
+    --warn:#F0B75A; --warn-soft:#2A2213; --warn-rule:#5C4720;
+    --code-bg:#11171E; --code-ink:#D9E0E7; --kw:#86AAFF; --str:#F0B75A; --cm:#7D8A97;
+    --state-new:#98A5B2; --state-ready:#86AAFF; --state-run:#6CCB98; --state-wait:#F0B75A; --state-term:#F08A8A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F141A; --surface:#161D25; --ink:#E3E8ED; --muted:#98A5B2; --rule:#29333E;
+  --accent:#86AAFF; --accent-ink:#0F141A; --accent-soft:#1C2A44;
+  --warn:#F0B75A; --warn-soft:#2A2213; --warn-rule:#5C4720;
+  --code-bg:#11171E; --code-ink:#D9E0E7; --kw:#86AAFF; --str:#F0B75A; --cm:#7D8A97;
+  --state-new:#98A5B2; --state-ready:#86AAFF; --state-run:#6CCB98; --state-wait:#F0B75A; --state-term:#F08A8A;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:var(--ground);color:var(--ink);font:400 16px/1.62 var(--body);padding-inline:16px;margin:0}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+
+.app{max-width:1180px;margin-inline:auto;display:grid;grid-template-columns:232px minmax(0,1fr);gap:48px;padding-block:32px 72px}
+
+/* ---------- navigation ---------- */
+.nav{position:sticky;top:24px;align-self:start;display:flex;flex-direction:column;gap:20px}
+.brand{font:700 20px/1.1 var(--display);letter-spacing:.01em;margin:0}
+.brand small{display:block;font:500 12px/1.4 var(--mono);color:var(--muted);letter-spacing:.04em;margin-top:6px}
+.nav ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.nav a{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:baseline;padding:8px 10px;border-radius:6px;text-decoration:none;color:var(--ink);font-size:14px;line-height:1.35}
+.nav a .wk{font:600 12px var(--mono);color:var(--muted)}
+.nav a .src{grid-column:2;font:400 11.5px var(--mono);color:var(--muted)}
+.nav a:hover{background:var(--surface)}
+.nav a[aria-current="page"]{background:var(--accent);color:var(--accent-ink)}
+.nav a[aria-current="page"] .wk,.nav a[aria-current="page"] .src{color:var(--accent-ink);opacity:.85}
+.nav .foot{font:400 12px/1.5 var(--mono);color:var(--muted);border-top:1px solid var(--rule);padding-top:14px}
+
+/* ---------- page type ---------- */
+main{min-width:0}
+.page{display:flex;flex-direction:column;gap:40px}
+.page-head{display:flex;flex-direction:column;gap:10px;padding-bottom:28px;border-bottom:1px solid var(--rule)}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}
+h1{font:700 clamp(32px,4.4vw,46px)/1.05 var(--display);letter-spacing:-.005em;margin:0;text-wrap:balance}
+.lede{font-size:18px;line-height:1.55;color:var(--muted);max-width:62ch;margin:0}
+section{display:flex;flex-direction:column;gap:16px;scroll-margin-top:24px}
+h2{font:600 26px/1.15 var(--display);margin:0;text-wrap:balance;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+h2 .ref{font:400 12px var(--mono);color:var(--muted);letter-spacing:.02em}
+h3{font:600 18px/1.25 var(--display);margin:8px 0 0;letter-spacing:.01em}
+p{margin:0;max-width:68ch}
+ul.pts{margin:0;padding-left:20px;max-width:68ch;display:flex;flex-direction:column;gap:6px}
+ul.pts li::marker{color:var(--muted)}
+strong{font-weight:600}
+code{font:500 .9em var(--mono);background:var(--code-bg);padding:1px 5px;border-radius:4px;border:1px solid var(--rule)}
+
+/* ---------- definitions ---------- */
+dl.defs{margin:0;display:grid;grid-template-columns:minmax(120px,190px) 1fr;border-top:1px solid var(--rule);max-width:76ch}
+dl.defs dt,dl.defs dd{padding:10px 0;border-bottom:1px solid var(--rule);margin:0}
+dl.defs dt{font:600 15px/1.4 var(--display);padding-right:16px;letter-spacing:.01em}
+dl.defs dd{color:var(--ink)}
+dl.defs dd .sub{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+
+/* ---------- panels ---------- */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.panel h3{margin:0}
+.panel p,.panel ul{font-size:15px}
+.panel .tag{font:500 11.5px var(--mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+
+.trap{background:var(--warn-soft);border:1px solid var(--warn-rule);border-radius:8px;padding:14px 18px;display:flex;flex-direction:column;gap:6px;max-width:76ch}
+.trap b{font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--warn)}
+.trap p,.trap ul{font-size:15px}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px}
+th,td{text-align:left;vertical-align:top;padding:10px 14px;border-bottom:1px solid var(--rule)}
+th{font:600 13px var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--code-bg)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600}
+td code{white-space:nowrap}
+
+/* ---------- code ---------- */
+figure.code{margin:0;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--code-bg);max-width:100%}
+figure.code figcaption{font:500 12px var(--mono);color:var(--muted);padding:7px 14px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;gap:12px}
+figure.code pre{margin:0;padding:12px 14px;overflow-x:auto;font:400 13.5px/1.55 var(--mono);color:var(--code-ink)}
+pre .k{color:var(--kw);font-weight:500} pre .s{color:var(--str)} pre .c{color:var(--cm);font-style:italic} pre .o{color:var(--muted)}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+
+/* ---------- recall ---------- */
+.recall{display:flex;flex-direction:column;gap:8px;max-width:76ch}
+.recall h3{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}
+details{background:var(--surface);border:1px solid var(--rule);border-radius:8px}
+summary{cursor:pointer;padding:12px 16px;font-weight:500;list-style:none;display:grid;grid-template-columns:18px 1fr;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+";font:600 16px/1.4 var(--mono);color:var(--accent)}
+details[open] summary::before{content:"−"}
+details > div{padding:0 16px 14px 44px;color:var(--ink);font-size:15px}
+
+/* ---------- figures ---------- */
+.fig{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;min-width:520px}
+.fig .cap{font:400 12.5px var(--mono);color:var(--muted);margin-top:10px}
+svg text{font-family:var(--mono)}
+
+.pager{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid var(--rule);padding-top:20px}
+.pager a{font:500 14px var(--mono);text-decoration:none;padding:8px 12px;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+.pager a:hover{border-color:var(--accent)}
+
+/* ---------- memory layout ---------- */
+.mem{display:grid;grid-template-columns:1fr auto;grid-template-rows:repeat(5,auto);border:1px solid var(--rule);border-radius:8px;background:var(--surface);overflow:hidden;align-self:start}
+.mem-row{grid-column:1;display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--rule);font-size:14px}
+.mem-row:nth-child(5){border-bottom:0}
+.mem-row span{font:600 13px var(--mono);color:var(--accent)}
+.mem-row em{font-style:normal;color:var(--muted)}
+.mem-row.gap{padding-block:22px;background:repeating-linear-gradient(135deg,transparent 0 6px,var(--code-bg) 6px 12px)}
+.mem-axis{grid-column:2;grid-row:1 / span 5;display:flex;flex-direction:column;justify-content:space-between;padding:10px 12px;border-left:1px solid var(--rule);font:400 11px var(--mono);color:var(--muted);text-align:right}
+
+/* ---------- formula ---------- */
+.formula{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:18px 20px;font:500 20px var(--mono);max-width:76ch}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle}
+.frac > span{padding:2px 8px;display:flex;align-items:center;gap:6px}
+.frac > span:first-child{border-bottom:2px solid var(--ink)}
+.frac.sm{font-size:15px}
+.frac.sm > span:first-child{border-bottom-width:1.5px}
+.formula .legend{font:400 13px var(--mono);color:var(--muted);flex-basis:100%}
+.num{font-variant-numeric:tabular-nums}
+.race tr.bad td{background:var(--warn-soft);color:var(--ink)}
+.race tr.bad td:last-child strong{color:var(--warn)}
+
+/* ---------- cheat sheet ---------- */
+.sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px 28px}
+.sheet-col{gap:10px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px 18px}
+.sheet-col h2{font-size:19px;padding-bottom:6px;border-bottom:2px solid var(--accent)}
+dl.defs.tight{grid-template-columns:minmax(92px,118px) 1fr;border-top:0;font-size:14px}
+dl.defs.tight dt{font-size:13.5px;padding:6px 10px 6px 0}
+dl.defs.tight dd{padding:6px 0;line-height:1.45}
+dl.defs.tight dt:nth-last-of-type(1),dl.defs.tight dd:last-child{border-bottom:0}
+
+@media (max-width:880px){
+  dl.defs.tight{grid-template-columns:minmax(92px,118px) 1fr}
+  dl.defs.tight dt{border-bottom:1px solid var(--rule);padding-bottom:6px}
+  .app{grid-template-columns:1fr;gap:24px;padding-block:16px 56px}
+  .nav{position:static;gap:12px}
+  .nav ol{flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .nav a{flex:0 0 auto;grid-template-columns:auto auto;border:1px solid var(--rule);background:var(--surface)}
+  .nav a .src,.nav .foot{display:none}
+  dl.defs{grid-template-columns:1fr}
+  dl.defs dt{border-bottom:0;padding-bottom:0}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+
+<div class="app">
+  <nav class="nav" aria-label="Quiz modules">
+    <p class="brand">OS Quiz Field Guide<small>Silberschatz 10th ed.</small></p>
+    <ol>
+      <li><a href="#start"><span class="wk">00</span><span>Start here</span><span class="src">what's on the quiz</span></a></li>
+      <li><a href="#m1"><span class="wk">W1</span><span>Intro &amp; OS Structure</span><span class="src">Ch 1, Ch 2</span></a></li>
+      <li><a href="#m2"><span class="wk">W2</span><span>Virtualization &amp; Shell</span><span class="src">Ch 18, Bash, C</span></a></li>
+      <li><a href="#m3"><span class="wk">W3</span><span>C &amp; Processes</span><span class="src">Ch 3, C Lanjut</span></a></li>
+      <li><a href="#m4"><span class="wk">W4</span><span>Threads &amp; Sync</span><span class="src">Ch 4</span></a></li>
+      <li><a href="#recall"><span class="wk">⇥</span><span>Night-before sheet</span><span class="src">one-screen recap</span></a></li>
+    </ol>
+    <p class="foot">Slide refs like <code>ch3·s8</code> point to the original deck so you can check a diagram.</p>
+  </nav>
+
+  <main id="main">
+<article class="page" id="start" data-page>
+  <header class="page-head">
+    <p class="eyebrow">Quiz scope · weeks 1–4</p>
+    <h1>Everything between power-on and two threads fighting over one counter</h1>
+    <p class="lede">A summary of the slides and handouts in your folder: Silberschatz chapters 1, 2, 3, 4 and 18, plus the Bash, C and advanced C handouts. Each week has its own page, and each page ends with self-check questions.</p>
+  </header>
+
+  <section>
+    <h2>How the four weeks connect</h2>
+    <p>The course follows one idea in order. The OS sits between programs and hardware (week 1). It can pretend to be hardware for a whole other OS (week 2). It runs programs as <strong>processes</strong>, which you create with C calls like <code>fork()</code> (week 3). Inside a process, <strong>threads</strong> share memory, and shared memory causes race conditions (week 4).</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Week</th><th>Topic</th><th>Source</th><th>Most likely to be asked</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Introduction &amp; OS Structure</td><td>Ch 1, Ch 2</td><td>Interrupts, dual mode, system calls, monolithic vs layered vs microkernel, policy vs mechanism</td></tr>
+          <tr><td>2</td><td>Virtualization, Shell Script, C</td><td>Ch 18, Bash handout, C handout</td><td>Hypervisor types 0/1/2, trap-and-emulate, binary translation, shebang, <code>$1 $# $?</code>, gcc stages</td></tr>
+          <tr><td>3</td><td>C Language &amp; Processes</td><td>Ch 3, C Lanjut handout</td><td>Process states, PCB, context switch, <code>fork()</code> return values, zombie vs orphan, IPC, pointers</td></tr>
+          <tr><td>4</td><td>Threads &amp; Synchronization</td><td>Ch 4 (+ race condition from Ch 3)</td><td>Concurrency vs parallelism, Amdahl's law, threading models, thread pools, race conditions</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="trap">
+    <b>About "Synchronization"</b>
+    <p>The syllabus says week 4 covers synchronization, but the Ch 4 deck in your folder is about threads only. Synchronization shows up in the Ch 3 deck (the <code>counter++</code> race condition), and that is what this guide covers. If your lecturer used Chapter 6 slides in class, review critical sections, mutexes and semaphores from those slides too.</p>
+  </div>
+
+  <nav class="pager" aria-label="Page navigation"><span></span><a href="#m1">Week 1: Intro &amp; OS Structure →</a></nav>
+</article>
+
+<article class="page" id="m1" data-page hidden>
+  <header class="page-head">
+    <p class="eyebrow">Week 1 · Silberschatz Ch 1 &amp; Ch 2</p>
+    <h1>Introduction &amp; Operating-System Structure</h1>
+    <p class="lede">What an OS is, how hardware tells it things (interrupts), how it protects itself (dual mode), what it offers programs (system calls), and the ways a kernel can be organised.</p>
+  </header>
+
+  <section>
+    <h2>What an operating system is <span class="ref">ch1·s5–10</span></h2>
+    <p>An OS is <strong>a program that acts as an intermediary between the user and the computer hardware</strong>. It has three goals: run user programs and make problems easier to solve, make the system convenient to use, and use the hardware efficiently.</p>
+    <dl class="defs">
+      <dt>Four components</dt><dd>Hardware (CPU, memory, I/O) → Operating system → Application programs → Users</dd>
+      <dt>Kernel</dt><dd>"The one program running at all times on the computer." This is the core of the OS.</dd>
+      <dt>System program</dt><dd>Ships with the OS but isn't part of the kernel.</dd>
+      <dt>Application program</dt><dd>Any program not associated with the OS.</dd>
+      <dt>Middleware</dt><dd>Frameworks on top of the OS that give developers extra services (databases, multimedia, graphics). Common on mobile OSes.</dd>
+      <dt>Two viewpoints</dt><dd>The OS is a <strong>resource allocator</strong> (it manages CPU, memory and I/O) and a <strong>control program</strong> (it controls how user programs run).</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Interrupts &amp; I/O <span class="ref">ch1·s12–19</span></h2>
+    <p>The CPU and device controllers share memory through a common bus. Each <strong>device controller</strong> has a local buffer and an OS <strong>device driver</strong>. The controller moves data between its device and its buffer. When it finishes, it raises an <strong>interrupt</strong> to tell the CPU.</p>
+    <ul class="pts">
+      <li>An interrupt transfers control to the <strong>interrupt service routine</strong> through the <strong>interrupt vector</strong>, which is a table holding the addresses of all service routines.</li>
+      <li>The interrupt architecture must <strong>save the address of the interrupted instruction</strong>. The OS saves the registers and program counter so it can resume afterwards.</li>
+      <li>A <strong>trap</strong> (or exception) is a <em>software-generated</em> interrupt. It is caused by an error (such as divide by zero) or by a request (a system call).</li>
+      <li>The OS is <strong>interrupt driven</strong>.</li>
+    </ul>
+    <div class="grid2">
+      <div class="panel"><span class="tag">Synchronous I/O</span><h3>Wait for completion</h3><p>Control returns to the user program only when the I/O finishes. The CPU idles with a wait instruction, and only one I/O request can be pending at a time.</p></div>
+      <div class="panel"><span class="tag">Asynchronous I/O</span><h3>Return immediately</h3><p>Control returns without waiting. A <strong>device-status table</strong> tracks each device's type, address and state. The program uses a system call when it wants to wait.</p></div>
+    </div>
+    <p><strong>DMA (Direct Memory Access)</strong> is used for fast devices. The controller copies a whole block straight into main memory without the CPU, so there is <strong>one interrupt per block</strong> instead of one per byte.</p>
+  </section>
+
+  <section>
+    <h2>Storage <span class="ref">ch1·s20–28, s41</span></h2>
+    <ul class="pts">
+      <li><strong>Bootstrap program</strong>: runs at power-up. It is stored in ROM/EPROM (firmware), initialises the system, and loads the kernel.</li>
+      <li><strong>Main memory</strong> (DRAM) is the only large storage the CPU can access directly. It is random access and <strong>volatile</strong>.</li>
+      <li><strong>Secondary storage</strong> is large and <strong>non-volatile</strong>. HDDs use platters divided into tracks and sectors. NVM devices are faster than HDDs.</li>
+      <li>The hierarchy trades off <strong>speed, cost and volatility</strong>. From fast to slow: registers → cache → main memory → NVM → HDD → optical → tape.</li>
+      <li><strong>Caching</strong> copies data into faster storage temporarily. Check the cache first; on a miss, copy the data in. Main memory acts as a cache for secondary storage.</li>
+      <li>Units: 1 KB = 1,024 bytes, 1 MB = 1,024², and so on. Networks are measured in <strong>bits</strong>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Multiprogramming, dual mode &amp; the timer <span class="ref">ch1·s29–35</span></h2>
+    <dl class="defs">
+      <dt>Multiprogramming (batch)</dt><dd>Keeps several jobs in memory so the CPU always has something to run. When a job waits for I/O, the OS switches to another job.</dd>
+      <dt>Multitasking (timesharing)</dt><dd>Switches jobs so often that users can interact with them. Response time should be <strong>&lt; 1 second</strong>. This leads to processes, CPU scheduling, swapping and virtual memory.</dd>
+      <dt>Dual-mode operation</dt><dd>The hardware provides a <strong>mode bit</strong>: <code>0</code> = kernel, <code>1</code> = user. <strong>Privileged instructions</strong> only run in kernel mode. A system call switches to kernel mode, and returning from it switches back to user mode.<span class="sub">This is how the OS protects itself from user programs.</span></dd>
+      <dt>Timer</dt><dd>Stops a process from running forever (for example, an infinite loop). The OS sets a counter (a privileged instruction), and when it reaches zero it raises an interrupt that gives control back to the OS.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>What the OS manages <span class="ref">ch1·s36–45</span></h2>
+    <div class="grid2">
+      <div class="panel"><span class="tag">Process</span><p>A <strong>program is passive, a process is active</strong>. The OS creates and deletes, suspends and resumes processes, and provides synchronization, communication and deadlock handling.</p></div>
+      <div class="panel"><span class="tag">Memory</span><p>Tracks which parts of memory are in use and by whom, decides what moves in and out, and allocates and frees memory.</p></div>
+      <div class="panel"><span class="tag">File system &amp; mass storage</span><p>Files and directories, access control, mapping files to disk, backups. Also mounting, free-space management, allocation, disk scheduling and partitioning.</p></div>
+      <div class="panel"><span class="tag">I/O subsystem</span><p><strong>Buffering</strong> holds data while it is being transferred. <strong>Caching</strong> keeps copies in faster storage. <strong>Spooling</strong> overlaps one job's output with other jobs' input.</p></div>
+    </div>
+    <p><strong>Protection</strong> controls which processes and users can access resources. <strong>Security</strong> defends against internal and external attacks. Systems identify users with a user ID and group ID. <strong>Privilege escalation</strong> lets a user switch to an effective ID with more rights.</p>
+  </section>
+
+  <section>
+    <h2>Architectures &amp; environments <span class="ref">ch1·s46–73</span></h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>Multiprocessor</td><td>Also called a parallel or tightly-coupled system. Advantages: more throughput, economy of scale, more reliability (graceful degradation).</td></tr>
+        <tr><td>Asymmetric MP</td><td>Each processor has a specific task.</td></tr>
+        <tr><td>Symmetric MP (SMP)</td><td>Every processor does all tasks.</td></tr>
+        <tr><td>Multicore</td><td>Several cores on one chip. Faster on-chip communication and less power than multiple chips.</td></tr>
+        <tr><td>NUMA</td><td>Each CPU has its own local memory. Accessing another CPU's memory is slower.</td></tr>
+        <tr><td>Clustered</td><td>Multiple whole systems working together, usually sharing storage over a SAN. <em>Asymmetric</em> = one machine on hot standby. <em>Symmetric</em> = all nodes run apps and monitor each other.</td></tr>
+        <tr><td>Emulation vs virtualization</td><td>Emulation: the guest CPU type differs from the host (slowest). Virtualization: the guest is compiled for the same CPU and runs natively under a VMM.</td></tr>
+        <tr><td>Distributed</td><td>Separate systems networked together (LAN, WAN, MAN, PAN) that look like one system.</td></tr>
+        <tr><td>Cloud</td><td>Public, private or hybrid. <strong>SaaS</strong> = apps, <strong>PaaS</strong> = a software stack such as a DB server, <strong>IaaS</strong> = servers and storage. Built on virtualization.</td></tr>
+        <tr><td>Client-server vs P2P</td><td>Servers answer client requests (compute server, file server). In P2P every node is a peer (Napster, Gnutella, Skype).</td></tr>
+        <tr><td>Real-time embedded</td><td>Has fixed time constraints. It is only correct if it finishes within those constraints.</td></tr>
+        <tr><td>FOSS</td><td>OSes released as source code. FSF / GNU GPL ("copyleft"). Examples: GNU/Linux, BSD UNIX.</td></tr>
+        <tr><td>Kernel data structures</td><td>Linked lists (singly, doubly, circular), BSTs (O(n) worst case, balanced O(lg n)), hash maps, bitmaps.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+  <section>
+    <h2>OS services <span class="ref">ch2·s4–12</span></h2>
+    <div class="grid2">
+      <div class="panel"><span class="tag">Helpful to the user</span><ul class="pts"><li>User interface: CLI, GUI, touchscreen, batch</li><li>Program execution</li><li>I/O operations</li><li>File-system manipulation</li><li>Communications (shared memory or message passing)</li><li>Error detection</li></ul></div>
+      <div class="panel"><span class="tag">Keep the system efficient</span><ul class="pts"><li>Resource allocation</li><li>Logging (who used what)</li><li>Protection (all access is controlled) and security (authenticating outsiders)</li></ul></div>
+    </div>
+    <p>The <strong>command-line interpreter (shell)</strong> reads a command and runs it. A command can be built into the shell, or it can just be the name of a program. With program names, you can add new commands without changing the shell. GUIs were invented at <strong>Xerox PARC</strong>.</p>
+  </section>
+
+  <section>
+    <h2>System calls <span class="ref">ch2·s13–27</span></h2>
+    <p>A <strong>system call</strong> is the programming interface to OS services. Programs rarely call them directly. They use an <strong>API</strong> instead: the <strong>Win32 API</strong>, the <strong>POSIX API</strong> (UNIX, Linux, macOS) or the <strong>Java API</strong>. For example, the C library's <code>printf()</code> calls the <code>write()</code> system call.</p>
+    <ul class="pts">
+      <li>Each system call has a <strong>number</strong>. The system-call interface keeps a table indexed by those numbers.</li>
+      <li>The caller doesn't need to know how the call is implemented. It only follows the API.</li>
+    </ul>
+    <h3>Three ways to pass parameters</h3>
+    <div class="grid2">
+      <div class="panel"><span class="tag">1 · Registers</span><p>The simplest method. It fails when there are more parameters than registers.</p></div>
+      <div class="panel"><span class="tag">2 · Block / table</span><p>Put the parameters in a block of memory and pass the block's address in a register. <strong>Linux and Solaris</strong> use this.</p></div>
+      <div class="panel"><span class="tag">3 · Stack</span><p>The program pushes the parameters and the OS pops them. Block and stack methods have <strong>no limit</strong> on the number or length of parameters.</p></div>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Type</th><th>Examples</th><th>UNIX calls</th></tr></thead>
+      <tbody>
+        <tr><td>Process control</td><td>create/terminate, load/execute, wait, allocate memory, locks</td><td><code>fork() exit() wait()</code></td></tr>
+        <tr><td>File management</td><td>create/delete, open/close, read/write, attributes</td><td><code>open() read() write() close()</code></td></tr>
+        <tr><td>Device management</td><td>request/release, read/write, attach/detach</td><td><code>ioctl() read() write()</code></td></tr>
+        <tr><td>Information maintenance</td><td>get/set time, system data, attributes</td><td><code>getpid() alarm() sleep()</code></td></tr>
+        <tr><td>Communications</td><td>create connections, send/receive, shared memory</td><td><code>pipe() shm_open() mmap()</code></td></tr>
+        <tr><td>Protection</td><td>get/set permissions, allow/deny users</td><td><code>chmod() umask() chown()</code></td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>Arduino</strong> is single-tasking with no OS: a boot loader loads one sketch. <strong>FreeBSD</strong> is multitasking: the shell calls <code>fork()</code>, then <code>exec()</code>, then waits. Exit code <code>0</code> means no error and <code>&gt;0</code> is an error code.</p>
+  </section>
+
+  <section>
+    <h2>System services, linkers &amp; loaders <span class="ref">ch2·s28–34</span></h2>
+    <ul class="pts">
+      <li><strong>System programs</strong> cover file management, status information, file modification, language support, program loading, communications and background services. Most users see the OS through these, not through system calls.</li>
+      <li><strong>Background services</strong> (daemons, services, subsystems) start at boot and run in <em>user</em> context, not in the kernel.</li>
+      <li>Source → compiler → <strong>relocatable object file</strong> → <strong>linker</strong> (combines object files and libraries) → executable → <strong>loader</strong> (puts it in memory). <strong>Relocation</strong> assigns the final addresses.</li>
+      <li><strong>Dynamically linked libraries</strong> (DLLs on Windows) are loaded when needed and shared by every program that uses them.</li>
+      <li>Apps are OS-specific because each OS has its own system calls and file formats. Workarounds: interpreted languages (Python), a VM (Java), or recompiling standard C. The <strong>ABI</strong> is the binary-level equivalent of an API.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Design principles <span class="ref">ch2·s35–37</span></h2>
+    <dl class="defs">
+      <dt>User goals</dt><dd>Convenient, easy to learn, reliable, safe, fast.</dd>
+      <dt>System goals</dt><dd>Easy to design, implement and maintain. Flexible, reliable, error-free, efficient.</dd>
+      <dt>Policy</dt><dd><strong>What</strong> will be done. Example: interrupt every 100 seconds.</dd>
+      <dt>Mechanism</dt><dd><strong>How</strong> to do it. Example: the timer.<span class="sub">Keep them separate so a policy change (100 → 200) doesn't need a new mechanism.</span></dd>
+      <dt>Implementation</dt><dd>Usually a mix: assembly at the lowest level, C for the main body, C/C++ and scripts for system programs. Higher-level code is easier to port but slower.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Kernel structures <span class="ref">ch2·s38–51</span></h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Structure</th><th>Idea</th><th>+ / −</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Simple</td><td>No clear structure</td><td>− no protection between parts</td><td>MS-DOS</td></tr>
+        <tr><td>Monolithic</td><td>Everything below the system-call interface and above the hardware is in one kernel</td><td>+ fast &nbsp;− hard to maintain</td><td>Original UNIX</td></tr>
+        <tr><td>Layered</td><td>Layer 0 = hardware, layer N = UI. Each layer only uses the layers below it</td><td>+ easy to debug &nbsp;− hard to define layers, slower</td><td>THE (textbook example)</td></tr>
+        <tr><td>Microkernel</td><td>Move as much as possible into user space. Modules talk by <strong>message passing</strong></td><td>+ easy to extend and port, more reliable and secure &nbsp;− user↔kernel messaging overhead</td><td>Mach, Darwin (partly)</td></tr>
+        <tr><td>Modules (LKMs)</td><td>Core components are loadable at runtime through known interfaces</td><td>+ like layers but more flexible</td><td>Linux, Solaris</td></tr>
+        <tr><td>Hybrid</td><td>Combines several approaches</td><td>+ balances performance, security and usability</td><td>Linux (monolithic + modules), Windows (monolithic + microkernel), macOS (Mach + BSD)</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>iOS</strong>: Cocoa Touch → Media services → Core services → Core OS (Darwin). <strong>Android</strong>: a modified Linux kernel with power management, ART/Dalvik VM, Java apps, and libraries such as SQLite and WebKit.</p>
+  </section>
+
+  <section>
+    <h2>Boot &amp; debugging <span class="ref">ch2·s52–59</span></h2>
+    <ul class="pts">
+      <li><strong>Building Linux</strong>: download source → <code>make menuconfig</code> → <code>make</code> (produces <code>vmlinuz</code>) → <code>make modules</code> → <code>make modules_install</code> → <code>make install</code>.</li>
+      <li><strong>Boot</strong>: execution starts at a fixed memory address. A bootstrap loader (BIOS, or <strong>UEFI</strong> on modern systems) finds and loads the kernel. <strong>GRUB</strong> lets you pick a kernel. Some systems use two steps: a boot block, then the loader.</li>
+      <li><strong>Debugging</strong>: log files, a <strong>core dump</strong> when an app fails, a <strong>crash dump</strong> when the kernel fails. Profiling samples the instruction pointer periodically.</li>
+      <li>Tools: <code>top</code> / Task Manager (performance), <code>strace</code> (system calls), <code>gdb</code> (source-level debugger), <code>perf</code>, <code>tcpdump</code> (network packets), BCC/eBPF (tracing).</li>
+      <li><strong>Kernighan's Law</strong>: debugging is twice as hard as writing code, so if you write code as cleverly as you can, you can't debug it.</li>
+    </ul>
+  </section>
+
+  <div class="recall">
+    <h3>Check yourself · week 1</h3>
+    <details><summary>What is the difference between an interrupt and a trap?</summary><div>Hardware devices raise interrupts (for example, a controller finishing I/O). A trap (exception) is software-generated, caused by an error such as divide by zero or by a system call.</div></details>
+    <details><summary>Why can't a user program just set the mode bit to kernel?</summary><div>Changing the mode is a privileged instruction. The only way into kernel mode is a system call, trap or interrupt, and those jump to OS code, not user code.</div></details>
+    <details><summary>Why does DMA reduce CPU load?</summary><div>The controller copies a whole block straight to memory and raises one interrupt per block, instead of interrupting the CPU for every byte.</div></details>
+    <details><summary>Name the three ways to pass system-call parameters. Which ones have no size limit?</summary><div>Registers, a memory block/table (address passed in a register), and the stack. Block and stack have no limit.</div></details>
+    <details><summary>Give one benefit and one cost of a microkernel.</summary><div>Benefit: easier to extend and port, more reliable and secure because less code runs in kernel mode. Cost: message passing between user space and the kernel adds performance overhead.</div></details>
+    <details><summary>"Switch processes every 10 ms" is a policy or a mechanism?</summary><div>A policy (what to do). The timer interrupt that makes it happen is the mechanism.</div></details>
+  </div>
+
+  <nav class="pager" aria-label="Page navigation"><a href="#start">← Start here</a><a href="#m2">Week 2: Virtualization &amp; Shell →</a></nav>
+</article>
+
+<article class="page" id="m2" data-page hidden>
+  <header class="page-head">
+    <p class="eyebrow">Week 2 · Silberschatz Ch 18 · Bash handout · C handout</p>
+    <h1>Virtualization, Shell Script &amp; C Basics</h1>
+    <p class="lede">How one machine pretends to be many, the techniques that make that possible, and the two tools you'll use in the lab: Bash scripts and GCC.</p>
+  </header>
+
+  <section>
+    <h2>The three parts of a VM system <span class="ref">ch18·s4–5</span></h2>
+    <p>The idea is to abstract the hardware of one computer into several separate execution environments. Each environment gets a virtual copy of the machine.</p>
+    <dl class="defs">
+      <dt>Host</dt><dd>The underlying hardware system.</dd>
+      <dt>VMM / hypervisor</dt><dd>Creates and runs VMs by giving each one an interface <strong>identical to the host</strong>. Paravirtualization is the exception.</dd>
+      <dt>Guest</dt><dd>The process given a virtual copy of the host. Usually a whole operating system.</dd>
+    </dl>
+    <p>History: first seen on <strong>IBM mainframes in 1972</strong>. Formal requirements for a VMM: programs see an environment essentially identical to the real machine, run with only minor slowdown, and the VMM stays in complete control of resources. In the late 1990s Intel CPUs got fast enough, and Xen and VMware appeared.</p>
+  </section>
+
+  <section>
+    <h2>Hypervisor types <span class="ref">ch18·s6–8, s24–36</span></h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Type</th><th>What it is</th><th>Key facts</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td>Type 0</td><td>Hardware/firmware support ("partitions", "domains")</td><td>Each guest has <strong>dedicated</strong> hardware. Smaller feature set. I/O is hard. Can nest virtualization.</td><td>IBM LPARs, Oracle LDOMs</td></tr>
+        <tr><td>Type 1</td><td>OS-like software running <strong>natively on the hardware</strong>, in kernel mode</td><td>Found in datacenters: consolidation, snapshots, cloning. Implements its own device drivers.</td><td>VMware ESX, Citrix XenServer, Joyent SmartOS</td></tr>
+        <tr><td>Type 1 (general-purpose OS)</td><td>A normal OS that also acts as a VMM</td><td>Treats guests like processes. Fewer features than a dedicated Type 1.</td><td>Windows Server + Hyper-V, RHEL + KVM</td></tr>
+        <tr><td>Type 2</td><td>An <strong>application</strong> running on a normal host OS</td><td>The host doesn't know it's a VMM. Worse performance, but no host changes needed.</td><td>VMware Workstation/Fusion, Parallels, VirtualBox</td></tr>
+        <tr><td>Paravirtualization</td><td>The guest OS is <strong>modified</strong> to cooperate with the VMM</td><td>Not an exact hardware copy. Faster. Xen uses shared circular buffers for I/O and <strong>hypercalls</strong> for page tables.</td><td>Xen</td></tr>
+        <tr><td>Programming-environment</td><td>Virtualizes a made-up optimized system, not real hardware</td><td>Write once, run anywhere. Bytecode + JIT + garbage collection.</td><td>JVM, .NET</td></tr>
+        <tr><td>Emulation</td><td>Guest built for a <strong>different CPU</strong></td><td>Translates every instruction. Roughly <strong>10× slower</strong>. Popular for old game consoles.</td><td>Console emulators</td></tr>
+        <tr><td>Application containment</td><td>Not virtualization. Apps are separated but share <strong>one kernel</strong></td><td>Each zone has its own apps, network stack, users and scheduler.</td><td>Solaris Zones, BSD Jails, AIX WPARs</td></tr>
+      </tbody>
+    </table></div>
+    <div class="trap">
+      <b>Exam trap</b>
+      <p>Type 1 runs <em>on bare metal</em>. Type 2 runs <em>on top of a host OS</em>. VirtualBox and VMware Workstation are Type 2. ESX is Type 1. Containers/zones are <strong>not</strong> VMs, because only one kernel runs.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Benefits <span class="ref">ch18·s10–11</span></h2>
+    <ul class="pts">
+      <li><strong>Isolation</strong>: the host is protected from VMs, and VMs from each other, so a virus is less likely to spread.</li>
+      <li><strong>Freeze / suspend / snapshot / clone</strong>: save a state, restore it, or copy a VM and run both.</li>
+      <li><strong>Templating</strong>: build an OS + app image once, then deploy many copies.</li>
+      <li><strong>Live migration</strong>: move a <em>running</em> VM to another host without interrupting users.</li>
+      <li>Put all of these together and you get <strong>cloud computing</strong>.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Building blocks <span class="ref">ch18·s12–22</span></h2>
+    <p>Most VMMs keep a <strong>VCPU</strong> for each guest. It holds the CPU state as the guest believes it to be, and is loaded when the guest is switched onto the real CPU.</p>
+    <div class="grid2">
+      <div class="panel"><span class="tag">Technique 1</span><h3>Trap-and-emulate</h3><p>The guest kernel runs in <strong>real user mode</strong> but in <strong>virtual kernel mode</strong>. When it attempts a privileged instruction, that causes a trap. The VMM takes over, performs the operation for the guest, and returns.</p><p>User-mode code runs at native speed. Kernel-mode code is slower.</p></div>
+      <div class="panel"><span class="tag">Technique 2</span><h3>Binary translation</h3><p>Needed for CPUs like older x86. Their <code>popf</code> instruction behaves differently in user mode <strong>without trapping</strong>, so trap-and-emulate can't catch it.</p><p>When the guest is in virtual kernel mode, the VMM reads ahead, runs normal instructions natively, translates "special" ones, and <strong>caches</strong> the translations. Booting Windows XP took 950,000 translations, a 5% slowdown.</p></div>
+      <div class="panel"><span class="tag">Memory</span><h3>Nested page tables (NPT)</h3><p>The guest thinks it controls its page tables. The VMM keeps a per-guest NPT that mirrors them and makes it active when that guest runs. Downside: more TLB misses, so it is slower.</p></div>
+      <div class="panel"><span class="tag">Hardware</span><h3>Intel VT-x (2005) · AMD-V (2006)</h3><p>Adds <strong>host and guest CPU modes</strong>, so binary translation is no longer needed. The CPU maintains the VCPU and supports NPT, DMA and interrupts in hardware.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>OS components under virtualization <span class="ref">ch18·s37–44</span></h2>
+    <dl class="defs">
+      <dt>CPU scheduling</dt><dd>Guests get VCPUs. Usually there aren't enough physical CPUs, which is called <strong>overcommitment</strong>. Cycle stealing means a guest's 100 ms time slice might really take a second, so its time-of-day clock drifts.</dd>
+      <dt>Memory</dt><dd>VMware ESX uses three methods: <strong>double paging</strong>, a <strong>balloon</strong> pseudo-driver that makes the guest release memory, and <strong>de-duplication</strong> of identical pages.</dd>
+      <dt>I/O &amp; network</dt><dd>Direct device access, DMA pass-through. Networking uses <strong>bridging</strong> (direct access) or <strong>NAT</strong>.</dd>
+      <dt>Storage</dt><dd>A guest disk is a <strong>disk image file</strong>. Copy the file to clone the guest, move the file to move it. P-to-V and V-to-P convert between physical and virtual formats.</dd>
+      <dt>Live migration</dt><dd>1) Source connects to target. 2) Target creates a guest (VCPU and so on). 3) Send read-only pages. 4) Send read-write pages and mark them clean. 5) Resend pages that became dirty, and repeat. 6) When that loop gets short: freeze, send the final VCPU state and dirty pages, start on the target. 7) Target confirms, source terminates its copy.</dd>
+    </dl>
+    <p>Research topics: <strong>unikernels</strong> (app + libraries + kernel services compiled into one binary), and partitioning/separation hypervisors such as Quest-V and Jailhouse for real-time and safety-critical systems.</p>
+  </section>
+  <section>
+    <h2>Bash scripting <span class="ref">Bash handout p2–10</span></h2>
+    <p><strong>Bash</strong> (Bourne Again SHell) is Ubuntu's default shell. It turns what you type into actions on the OS. You can use it interactively or save commands in a <code>.sh</code> script file.</p>
+    <div class="pair">
+      <figure class="code"><figcaption><span>hello.sh</span><span>structure</span></figcaption><pre><span class="c">#!/bin/bash</span>          <span class="c"># shebang: must be line 1</span>
+<span class="c"># comments start with #</span>
+echo <span class="s">"Selamat datang di Bash"</span>
+date
+echo <span class="s">"Direktori: $PWD"</span></pre></figure>
+      <figure class="code"><figcaption><span>terminal</span><span>3 steps to run</span></figcaption><pre><span class="o">$</span> nano hello.sh      <span class="c"># 1. create</span>
+<span class="o">$</span> chmod +x hello.sh  <span class="c"># 2. make executable</span>
+<span class="o">$</span> ./hello.sh         <span class="c"># 3. run</span>
+<span class="o">$</span> bash -x hello.sh   <span class="c"># trace each step</span></pre></figure>
+    </div>
+
+    <h3>Variables &amp; input</h3>
+    <figure class="code"><figcaption><span>variabel.sh</span></figcaption><pre>nama=<span class="s">"Andi"</span>              <span class="c"># NO spaces around =</span>
+umur=20
+echo <span class="s">"Halo $nama, umur $umur tahun"</span>
+<span class="k">read</span> -p <span class="s">"Masukkan kota: "</span> kota   <span class="c"># user input</span>
+echo <span class="s">"User: $USER  Folder: $PWD"</span>  <span class="c"># built-in variables</span>
+TANGGAL=$(date +%Y-%m-%d)      <span class="c"># command substitution</span>
+angka=$((angka + 1))           <span class="c"># arithmetic</span></pre></figure>
+    <ul class="pts">
+      <li>No spaces around <code>=</code>. Read a variable with <code>$name</code>. Wrap it in double quotes (<code>"$file"</code>) so spaces don't break it.</li>
+      <li>Names are case-sensitive. By convention, lowercase is for normal variables and UPPERCASE for constants (<code>SUMBER</code>, <code>TUJUAN</code>).</li>
+    </ul>
+
+    <h3>Conditionals &amp; loops</h3>
+    <div class="pair">
+      <figure class="code"><figcaption><span>nilai.sh</span></figcaption><pre><span class="k">if</span> [ $nilai -ge 75 ]; <span class="k">then</span>
+  echo <span class="s">"Lulus"</span>
+<span class="k">elif</span> [ $nilai -ge 60 ]; <span class="k">then</span>
+  echo <span class="s">"Remedial"</span>
+<span class="k">else</span>
+  echo <span class="s">"Belum lulus"</span>
+<span class="k">fi</span></pre></figure>
+      <figure class="code"><figcaption><span>loops.sh</span></figcaption><pre><span class="k">for</span> i <span class="k">in</span> 1 2 3 4 5; <span class="k">do</span>
+  echo <span class="s">"ke-$i"</span>
+<span class="k">done</span>
+
+<span class="k">while</span> [ $angka -le 5 ]; <span class="k">do</span>
+  angka=$((angka + 1))
+<span class="k">done</span></pre></figure>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Test</th><th>Meaning</th><th>Test</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>-eq</code></td><td>equal</td><td><code>-ne</code></td><td>not equal</td></tr>
+        <tr><td><code>-gt</code></td><td>greater than</td><td><code>-lt</code></td><td>less than</td></tr>
+        <tr><td><code>-ge</code></td><td>greater or equal</td><td><code>-le</code></td><td>less or equal</td></tr>
+        <tr><td><code>-f</code></td><td>file exists</td><td><code>-d</code></td><td>directory exists</td></tr>
+      </tbody>
+    </table></div>
+    <p>Put spaces inside the brackets: <code>[ $a -eq $b ]</code>. Use <code>break</code> to leave a loop and <code>continue</code> to skip to the next iteration.</p>
+
+    <h3>Functions &amp; special variables</h3>
+    <div class="pair">
+      <figure class="code"><figcaption><span>fungsi.sh</span><span>./fungsi.sh Ani 21</span></figcaption><pre>sapa() {
+  echo <span class="s">"Halo, $1! Umur $2 tahun."</span>
+}
+sapa <span class="s">"Budi"</span> 20    <span class="c"># define BEFORE calling</span></pre></figure>
+      <dl class="defs">
+        <dt><code>$0</code></dt><dd>script name</dd>
+        <dt><code>$1 $2</code></dt><dd>1st, 2nd argument</dd>
+        <dt><code>$#</code></dt><dd>number of arguments</dd>
+        <dt><code>$@</code></dt><dd>all arguments</dd>
+        <dt><code>$?</code></dt><dd>exit status of the last command (0 = OK)</dd>
+      </dl>
+    </div>
+    <p>The backup example uses <code>mkdir -p</code> (create the folder if it's missing, no error), <code>tar -czf</code> (compress to <code>.tar.gz</code>), <code>exit 1</code> (stop with an error status), and <code>crontab -e</code> to run it on a schedule.</p>
+  </section>
+
+  <section>
+    <h2>C basics <span class="ref">C handout p2–12</span></h2>
+    <p>C was created by <strong>Dennis Ritchie in 1972 at Bell Labs</strong>. It is a compiled, mid-level language close to the machine, used for Linux, databases and microcontrollers. Every statement ends with <code>;</code>, programs start at <code>main()</code>, and it is case-sensitive.</p>
+    <div class="pair">
+      <figure class="code"><figcaption><span>hello.c</span></figcaption><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>   <span class="c">// printf, scanf</span>
+<span class="k">int</span> main() {
+    printf(<span class="s">"Halo, C!\n"</span>);
+    <span class="k">return</span> 0;         <span class="c">// finished without error</span>
+}</pre></figure>
+      <figure class="code"><figcaption><span>terminal</span></figcaption><pre><span class="o">$</span> sudo apt install build-essential
+<span class="o">$</span> gcc hello.c -o hello   <span class="c"># without -o: a.out</span>
+<span class="o">$</span> ./hello
+Halo, C!
+<span class="o">$</span> gcc -Wall x.c -o x      <span class="c"># show all warnings</span></pre></figure>
+    </div>
+    <h3>What GCC does, in order</h3>
+    <div class="grid2">
+      <div class="panel"><span class="tag">1 · Preprocessing</span><p>Handles <code>#include</code> and <code>#define</code>.</p></div>
+      <div class="panel"><span class="tag">2 · Compiling</span><p>C → assembly.</p></div>
+      <div class="panel"><span class="tag">3 · Assembling</span><p>Assembly → object code (<code>.o</code>).</p></div>
+      <div class="panel"><span class="tag">4 · Linking</span><p>Object code + libraries → executable.</p></div>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Type</th><th>Format</th><th>Holds</th></tr></thead>
+      <tbody>
+        <tr><td><code>int</code></td><td><code>%d</code></td><td>integer</td></tr>
+        <tr><td><code>float</code></td><td><code>%f</code></td><td>decimal (<code>%.2f</code> = 2 decimal places)</td></tr>
+        <tr><td><code>double</code></td><td><code>%lf</code></td><td>high-precision decimal</td></tr>
+        <tr><td><code>char</code></td><td><code>%c</code></td><td>one character</td></tr>
+        <tr><td><code>char[]</code></td><td><code>%s</code></td><td>string</td></tr>
+      </tbody>
+    </table></div>
+    <ul class="pts">
+      <li><code>scanf("%d", &amp;panjang);</code> The <code>&amp;</code> gives scanf the variable's <strong>memory address</strong>. Forgetting it is the most common beginner bug.</li>
+      <li>Operators: <code>+ - * / %</code> (<code>%</code> is the remainder). Use <code>==</code> to compare and <code>=</code> to assign.</li>
+      <li><code>switch</code> needs a <code>break</code> in every <code>case</code>, or execution falls through to the next case.</li>
+      <li>In <code>for (int i = 1; i &lt;= 5; i++)</code> the three parts are start value, stop condition, and increment. If the counter never changes, the loop runs forever.</li>
+    </ul>
+  </section>
+
+  <div class="recall">
+    <h3>Check yourself · week 2</h3>
+    <details><summary>What's the difference between a Type 1 and a Type 2 hypervisor? Give an example of each.</summary><div>Type 1 runs directly on the hardware in kernel mode (VMware ESX, XenServer). Type 2 is an app on a host OS (VirtualBox, VMware Workstation).</div></details>
+    <details><summary>Why couldn't trap-and-emulate virtualize older x86 CPUs?</summary><div>Some instructions, such as <code>popf</code>, act differently in user mode without causing a trap, so the VMM never gets control. Binary translation (later VT-x/AMD-V) solved this.</div></details>
+    <details><summary>How is paravirtualization different from full virtualization?</summary><div>The guest OS is modified to know about the VMM and cooperate with it (for example, hypercalls). The VMM doesn't present an exact copy of the hardware, but performance improves.</div></details>
+    <details><summary>Are containers/zones virtual machines?</summary><div>No. They are application containment: only one kernel (the host's) runs. Apps are isolated with their own network stack, users and resources.</div></details>
+    <details><summary>What do <code>$#</code> and <code>$?</code> hold?</summary><div><code>$#</code> is the number of arguments. <code>$?</code> is the exit status of the last command, where 0 means success.</div></details>
+    <details><summary>What does <code>nama = "Andi"</code> do in Bash?</summary><div>It fails. Bash tries to run a command called <code>nama</code> with arguments <code>=</code> and <code>Andi</code>. Variable assignment must have no spaces: <code>nama="Andi"</code>.</div></details>
+    <details><summary>List the four GCC stages in order.</summary><div>Preprocessing → compiling → assembling → linking.</div></details>
+  </div>
+
+  <nav class="pager" aria-label="Page navigation"><a href="#m1">← Week 1</a><a href="#m3">Week 3: C &amp; Processes →</a></nav>
+</article>
+
+<article class="page" id="m3" data-page hidden>
+  <header class="page-head">
+    <p class="eyebrow">Week 3 · Silberschatz Ch 3 · C Lanjut handout</p>
+    <h1>C Language &amp; Processes</h1>
+    <p class="lede">A process is a program in execution. This page covers what's inside one, the states it moves through, how <code>fork()</code> creates new ones, how they talk to each other, and the C and text tools from the lab handout.</p>
+  </header>
+
+  <section>
+    <h2>Anatomy of a process <span class="ref">ch3·s4–7</span></h2>
+    <p>A <strong>program</strong> is passive: an executable file on disk. It becomes a <strong>process</strong>, which is active, once it is loaded into memory. One program can be several processes, for example when several users run the same program.</p>
+    <div class="grid2">
+      <div class="mem" role="img" aria-label="Process memory layout from high address to low: stack, free space, heap, data, text">
+        <div class="mem-row"><span>stack</span><em>locals, parameters, return addresses · grows ↓</em></div>
+        <div class="mem-row gap"><span>&nbsp;</span><em>free space</em></div>
+        <div class="mem-row"><span>heap</span><em><code>malloc()</code> at run time · grows ↑</em></div>
+        <div class="mem-row"><span>data</span><em>global variables</em></div>
+        <div class="mem-row"><span>text</span><em>program code</em></div>
+        <div class="mem-axis"><span>max address</span><span>0</span></div>
+      </div>
+      <dl class="defs">
+        <dt>Text</dt><dd>The program code.</dd>
+        <dt>Data</dt><dd>Global variables. In a C program this is split into initialized and uninitialized data.</dd>
+        <dt>Heap</dt><dd>Memory allocated dynamically at run time.</dd>
+        <dt>Stack</dt><dd>Temporary data: function parameters, return addresses, local variables.</dd>
+        <dt>Current activity</dt><dd>Program counter and CPU registers.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section>
+    <h2>Process states <span class="ref">ch3·s8–9</span></h2>
+    <div class="fig">
+      <svg viewBox="0 0 720 270" role="img" aria-label="Process state diagram: new to ready (admitted), ready to running (scheduler dispatch), running to ready (interrupt), running to waiting (I/O or event wait), waiting to ready (I/O or event completion), running to terminated (exit)">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--muted)"/></marker></defs>
+        <g style="stroke:var(--muted);stroke-width:1.5;fill:none">
+          <line x1="118" y1="68" x2="182" y2="120" marker-end="url(#ah)"/>
+          <line x1="272" y1="132" x2="446" y2="132" marker-end="url(#ah)"/>
+          <line x1="446" y1="150" x2="272" y2="150" marker-end="url(#ah)"/>
+          <line x1="520" y1="160" x2="420" y2="220" marker-end="url(#ah)"/>
+          <line x1="300" y1="220" x2="200" y2="160" marker-end="url(#ah)"/>
+          <line x1="540" y1="120" x2="602" y2="68" marker-end="url(#ah)"/>
+        </g>
+        <g style="font-size:12px;fill:var(--muted)">
+          <text x="140" y="104" text-anchor="end">admitted</text>
+          <text x="360" y="124" text-anchor="middle">scheduler dispatch</text>
+          <text x="360" y="170" text-anchor="middle">interrupt</text>
+          <text x="484" y="210" text-anchor="start">I/O or event wait</text>
+          <text x="236" y="210" text-anchor="end">I/O or event completion</text>
+          <text x="582" y="104" text-anchor="start">exit</text>
+        </g>
+        <g style="font-size:14px;font-weight:600" text-anchor="middle">
+          <rect x="30" y="32" width="120" height="36" rx="18" style="fill:var(--surface);stroke:var(--state-new);stroke-width:2"/><text x="90" y="55" style="fill:var(--ink)">new</text>
+          <rect x="150" y="123" width="120" height="36" rx="18" style="fill:var(--surface);stroke:var(--state-ready);stroke-width:2"/><text x="210" y="146" style="fill:var(--ink)">ready</text>
+          <rect x="450" y="123" width="120" height="36" rx="18" style="fill:var(--surface);stroke:var(--state-run);stroke-width:2"/><text x="510" y="146" style="fill:var(--ink)">running</text>
+          <rect x="300" y="220" width="120" height="36" rx="18" style="fill:var(--surface);stroke:var(--state-wait);stroke-width:2"/><text x="360" y="243" style="fill:var(--ink)">waiting</text>
+          <rect x="570" y="32" width="120" height="36" rx="18" style="fill:var(--surface);stroke:var(--state-term);stroke-width:2"/><text x="630" y="55" style="fill:var(--ink)">terminated</text>
+        </g>
+      </svg>
+      <p class="cap">Only <strong>one process per core</strong> can be running. Many can be ready or waiting.</p>
+    </div>
+    <dl class="defs">
+      <dt>New</dt><dd>Being created.</dd>
+      <dt>Ready</dt><dd>Waiting to be assigned a processor.</dd>
+      <dt>Running</dt><dd>Instructions are executing.</dd>
+      <dt>Waiting</dt><dd>Waiting for an event, such as I/O finishing.</dd>
+      <dt>Terminated</dt><dd>Finished execution.</dd>
+    </dl>
+    <div class="trap">
+      <b>Exam trap</b>
+      <p>Waiting never goes straight to running. When the I/O finishes, the process goes back to <strong>ready</strong> and waits for the scheduler. An <strong>interrupt</strong> (such as the timer) moves running → ready. Requesting <strong>I/O</strong> moves running → waiting.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>PCB, scheduling &amp; context switch <span class="ref">ch3·s10–18</span></h2>
+    <p>Each process is represented by a <strong>Process Control Block (PCB)</strong>, also called a task control block. In Linux it is the C structure <code>task_struct</code>.</p>
+    <div class="grid2">
+      <div class="panel"><span class="tag">PCB fields</span><ul class="pts">
+        <li>Process state</li><li>Program counter</li><li>CPU registers</li><li>CPU-scheduling info (priority, queue pointers)</li><li>Memory-management info</li><li>Accounting info (CPU used, time limits)</li><li>I/O status (devices, open files)</li></ul></div>
+      <div class="panel"><span class="tag">Linux task_struct</span>
+<pre style="margin:0;font:400 13px/1.55 var(--mono);overflow-x:auto">pid_t pid;
+long state;
+unsigned int time_slice;
+struct task_struct *parent;
+struct list_head children;
+struct files_struct *files;
+struct mm_struct *mm;</pre></div>
+    </div>
+    <ul class="pts">
+      <li>The <strong>process scheduler</strong> picks the next process for a CPU core. Its goal is to maximize CPU use.</li>
+      <li><strong>Ready queue</strong>: processes in memory, ready to run. <strong>Wait queues</strong>: processes waiting for an event. Processes move between queues.</li>
+      <li><strong>Context switch</strong>: save the old process's state into its PCB and load the new one's. This time is <strong>pure overhead</strong> because no useful work happens. It takes longer with a more complex OS or PCB, and depends on hardware support.</li>
+      <li>Mobile: early iOS ran one foreground process with limited background tasks. Android allows background work through <strong>services</strong>, which have no UI and use little memory.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Creating &amp; ending processes <span class="ref">ch3·s19–28 · C Lanjut p4–5</span></h2>
+    <p>Parents create children, forming a <strong>tree of processes</strong>, each identified by a <strong>pid</strong>. Resource options: share all, share some, or share nothing. Execution options: run concurrently, or the parent waits for the children to finish.</p>
+    <div class="pair">
+      <figure class="code"><figcaption><span>fork.c</span><span>C Lanjut p4</span></figcaption><pre><span class="k">#include</span> <span class="s">&lt;stdio.h&gt;</span>
+<span class="k">#include</span> <span class="s">&lt;unistd.h&gt;</span>
+<span class="k">int</span> main() {
+    pid_t pid = fork();
+    <span class="k">if</span> (pid == 0) {
+        printf(<span class="s">"Child: PID %d\n"</span>, getpid());
+    } <span class="k">else if</span> (pid &gt; 0) {
+        printf(<span class="s">"Parent: PID %d\n"</span>, getpid());
+        printf(<span class="s">"Child PID: %d\n"</span>, pid);
+    }
+    <span class="k">return</span> 0;
+}</pre></figure>
+      <div class="tablewrap"><table style="min-width:0">
+        <thead><tr><th>Call</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>fork()</code></td><td>Duplicates the calling process. The code after it runs <strong>twice</strong>.</td></tr>
+          <tr><td>returns <code>0</code></td><td>…in the <strong>child</strong></td></tr>
+          <tr><td>returns <code>&gt;0</code></td><td>…in the <strong>parent</strong> (the value is the child's PID)</td></tr>
+          <tr><td>returns <code>-1</code></td><td>fork failed</td></tr>
+          <tr><td><code>exec()</code></td><td>Replaces the process's memory with a new program</td></tr>
+          <tr><td><code>wait()</code></td><td>Parent blocks until a child ends. <code>pid = wait(&amp;status);</code></td></tr>
+          <tr><td><code>exit()</code></td><td>Process ends and returns status to the parent</td></tr>
+          <tr><td><code>abort()</code></td><td>Parent kills a child</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <dl class="defs">
+      <dt>Zombie</dt><dd>The child has terminated but the parent <strong>hasn't called <code>wait()</code></strong> yet.</dd>
+      <dt>Orphan</dt><dd>The <strong>parent terminated</strong> without calling <code>wait()</code>.</dd>
+      <dt>Cascading termination</dt><dd>Some OSes don't let children outlive their parent, so all children and grandchildren are killed. The OS starts this.</dd>
+      <dt>Why abort a child</dt><dd>It used too many resources, its task is no longer needed, or the parent is exiting.</dd>
+      <dt>Android importance</dt><dd>Foreground → visible → service → background → empty. Android kills the least important first.</dd>
+      <dt>Chrome</dt><dd>Multiprocess: a <strong>browser</strong> process (UI, disk, network), a <strong>renderer</strong> per site (sandboxed), and a <strong>plug-in</strong> process per plug-in type.</dd>
+    </dl>
+    <div class="trap">
+      <b>Classic question</b>
+      <p>How many processes do <code>fork(); fork(); fork();</code> create? Each call doubles the count, so there are <strong>2³ = 8 processes</strong> in total (the original plus 7 new ones). In general, <em>n</em> forks give 2ⁿ.</p>
+    </div>
+  </section>
+  <section>
+    <h2>Interprocess communication <span class="ref">ch3·s29–50</span></h2>
+    <p>Processes are either <strong>independent</strong> or <strong>cooperating</strong>. Reasons to cooperate: information sharing, computation speedup, modularity, convenience. Cooperating processes need <strong>IPC</strong>, which comes in two models.</p>
+    <div class="grid2">
+      <div class="panel"><span class="tag">Model A</span><h3>Shared memory</h3><p>A region of memory is shared between processes. It is controlled by the <strong>user processes, not the OS</strong>. It is fast, but the processes must synchronize their own access.</p></div>
+      <div class="panel"><span class="tag">Model B</span><h3>Message passing</h3><p>No shared variables. The OS provides <code>send(message)</code> and <code>receive(message)</code>. Messages can be fixed or variable size. Easier to use and works across a network.</p></div>
+    </div>
+
+    <h3>Producer–consumer with a bounded buffer</h3>
+    <div class="pair">
+      <figure class="code"><figcaption><span>producer</span><span>ch3·s34</span></figcaption><pre><span class="k">while</span> (true) {
+  <span class="k">while</span> (((in + 1) % BUFFER_SIZE) == out)
+    ; <span class="c">/* full: do nothing */</span>
+  buffer[in] = next_produced;
+  in = (in + 1) % BUFFER_SIZE;
+}</pre></figure>
+      <figure class="code"><figcaption><span>consumer</span><span>ch3·s35</span></figcaption><pre><span class="k">while</span> (true) {
+  <span class="k">while</span> (in == out)
+    ; <span class="c">/* empty: do nothing */</span>
+  next_consumed = buffer[out];
+  out = (out + 1) % BUFFER_SIZE;
+}</pre></figure>
+    </div>
+    <p>This version is correct but only holds <strong>BUFFER_SIZE − 1</strong> items. Adding a shared <code>counter</code> lets it fill every slot, but that causes a <strong>race condition</strong>. Week 4 covers it.</p>
+    <p>An <strong>unbounded buffer</strong> means the producer never waits. With a <strong>bounded buffer</strong>, the producer waits when the buffer is full. In both cases the consumer waits when it is empty.</p>
+
+    <h3>Message-passing design choices</h3>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Choice</th><th>Option 1</th><th>Option 2</th></tr></thead>
+      <tbody>
+        <tr><td>Naming</td><td><strong>Direct</strong>: <code>send(P, msg)</code>. Links are automatic, exactly one link per pair, exactly two processes per link.</td><td><strong>Indirect</strong>: <code>send(A, msg)</code> through <strong>mailbox/port A</strong>. A link can have many processes, and a pair can share several links.</td></tr>
+        <tr><td>Blocking</td><td><strong>Blocking = synchronous</strong>. A blocking send waits until the message is received. A blocking receive waits until a message is available.</td><td><strong>Non-blocking = asynchronous</strong>. Send continues immediately. Receive returns a message or null.</td></tr>
+        <tr><td>Buffering</td><td><strong>Zero capacity</strong>: sender waits for the receiver (rendezvous). <strong>Bounded</strong>: sender waits if the link is full.</td><td><strong>Unbounded</strong>: sender never waits.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Blocking send + blocking receive = <strong>rendezvous</strong>. If P1 sends to mailbox A shared with P2 and P3, who gets the message? Options: allow only two processes per link, allow one receiver at a time, or let the system pick a receiver and tell the sender.</p>
+  </section>
+
+  <section>
+    <h2>IPC in real systems <span class="ref">ch3·s51–70</span></h2>
+    <dl class="defs">
+      <dt>POSIX shared memory</dt><dd><code>shm_fd = shm_open(name, O_CREAT | O_RDWR, 0666);</code> → <code>ftruncate(shm_fd, 4096);</code> sets the size → <code>mmap()</code> maps it and returns a pointer you read and write through.</dd>
+      <dt>Mach</dt><dd>Everything is a message, even system calls. Each task gets two ports at creation (<strong>Kernel</strong> and <strong>Notify</strong>). Uses <code>mach_msg()</code> and <code>mach_port_allocate()</code>. If the mailbox is full: wait forever, wait n ms, return immediately, or cache the message temporarily.</dd>
+      <dt>Windows ALPC</dt><dd>Advanced local procedure call, same machine only. The client opens a connection port and sends a request. The server creates two private ports and returns a handle to one of them.</dd>
+      <dt>Ordinary pipe</dt><dd><strong>Unidirectional</strong> (write end → read end). Needs a <strong>parent–child</strong> relationship. Windows calls these <em>anonymous pipes</em>.</dd>
+      <dt>Named pipe</dt><dd><strong>Bidirectional</strong>, no parent–child relationship needed, several processes can use it. Available on UNIX and Windows.</dd>
+      <dt>Socket</dt><dd>An endpoint = <strong>IP address + port</strong>, for example <code>161.25.19.8:1625</code>. Ports <strong>below 1024</strong> are well known. <code>127.0.0.1</code> is loopback. Java has TCP (connection-oriented), UDP (connectionless) and multicast sockets.</dd>
+      <dt>RPC</dt><dd>Remote procedure call. A client-side <strong>stub</strong> finds the server and <strong>marshals</strong> the parameters, and the server stub unpacks them. <strong>XDR</strong> handles big- vs little-endian. The goal is <em>exactly once</em> delivery, not at most once. A <strong>matchmaker</strong> service connects client to server.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Pointers &amp; arrays <span class="ref">C Lanjut p2–3</span></h2>
+    <p>A <strong>pointer</strong> is a variable that stores the <strong>address</strong> of another variable. <code>&amp;x</code> gives the address of x. <code>*p</code> <strong>dereferences</strong> p, giving the value at that address. You need pointers when a function must change the caller's variables.</p>
+    <div class="pair">
+      <figure class="code"><figcaption><span>swap.c</span><span>output: x=10 y=5</span></figcaption><pre><span class="k">void</span> swap(<span class="k">int</span> *a, <span class="k">int</span> *b) {
+    <span class="k">int</span> temp = *a;
+    *a = *b;
+    *b = temp;
+}
+<span class="k">int</span> main() {
+    <span class="k">int</span> x = 5, y = 10;
+    swap(&amp;x, &amp;y);   <span class="c">// pass addresses</span>
+    printf(<span class="s">"x=%d y=%d\n"</span>, x, y);
+}</pre></figure>
+      <figure class="code"><figcaption><span>array.c</span></figcaption><pre><span class="k">int</span> nilai[5] = {10, 20, 30, 40, 50};
+<span class="k">int</span> *p = nilai;      <span class="c">// same as &amp;nilai[0]</span>
+<span class="k">for</span> (<span class="k">int</span> i = 0; i &lt; 5; i++) {
+    printf(<span class="s">"%d %d\n"</span>, nilai[i], *(p + i));
+}
+<span class="c">// nilai[i] == *(p + i), always</span></pre></figure>
+    </div>
+    <p>An array name <strong>is the address of its first element</strong>. Pointer arithmetic: <code>p + i</code> is the address of element i, and <code>*(p + i)</code> is its value.</p>
+  </section>
+
+  <section>
+    <h2>grep, awk, sed <span class="ref">C Lanjut p6–12</span></h2>
+    <div class="grid2">
+      <div class="panel"><span class="tag">grep</span><h3>Find lines</h3><p>Fast pattern search. Scans line by line and prints matching lines.</p></div>
+      <div class="panel"><span class="tag">sed</span><h3>Edit a stream</h3><p>Substitute, insert, delete or select lines without opening an editor.</p></div>
+      <div class="panel"><span class="tag">awk</span><h3>Process columns</h3><p>A full scripting language for field-based processing, reports and arithmetic.</p></div>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Command</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>grep "ERROR" app.log</code></td><td>Print lines containing ERROR</td></tr>
+        <tr><td><code>grep -i / -v / -c / -n</code></td><td>Ignore case / <strong>invert</strong> (lines that don't match) / <strong>count</strong> matches / show line numbers</td></tr>
+        <tr><td><code>grep -A 2 "ERROR" log.txt</code></td><td>Also show 2 lines after each match</td></tr>
+        <tr><td><code>grep "^root" /etc/passwd</code></td><td>Regex: <code>^</code> start of line, <code>$</code> end, <code>.</code> any character, <code>*</code> 0 or more, <code>[0-9]</code> character class</td></tr>
+        <tr><td><code>grep -E "^(root|admin)"</code></td><td><code>-E</code> enables extended regex: <code>(a|b)</code>, <code>{n}</code></td></tr>
+        <tr><td><code>awk '{print $1, $3}'</code></td><td>Print columns 1 and 3. <code>$0</code> = whole line, <code>NF</code> = number of fields, <code>NR</code> = line number</td></tr>
+        <tr><td><code>awk -F: '{print $1}' /etc/passwd</code></td><td><code>-F:</code> sets the field separator to <code>:</code> (default is whitespace)</td></tr>
+        <tr><td><code>awk '{sum += $2} END {print sum}'</code></td><td><code>END { }</code> runs once after all lines</td></tr>
+        <tr><td><code>awk '$3 &gt; 100 {print $1}'</code></td><td>Pattern + action: only lines where column 3 &gt; 100</td></tr>
+        <tr><td><code>sed 's/foo/bar/'</code></td><td>Replace the <strong>first</strong> match on each line</td></tr>
+        <tr><td><code>sed 's/foo/bar/g'</code></td><td>Replace <strong>all</strong> matches (global)</td></tr>
+        <tr><td><code>sed -n '2,4p'</code></td><td>Print only lines 2 to 4</td></tr>
+        <tr><td><code>sed '/^#/d'</code></td><td>Delete lines matching the pattern (here, comment lines)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <div class="recall">
+    <h3>Check yourself · week 3</h3>
+    <details><summary>What's the difference between a program and a process?</summary><div>A program is a passive executable file on disk. A process is active: a program loaded into memory with a program counter, stack, heap, data and so on.</div></details>
+    <details><summary>What does <code>fork()</code> return, and where?</summary><div>0 in the child, the child's PID (&gt;0) in the parent, and -1 if it fails.</div></details>
+    <details><summary>Zombie or orphan: the child exits but the parent never calls <code>wait()</code>?</summary><div>Zombie. An orphan is when the <em>parent</em> terminates first without calling wait().</div></details>
+    <details><summary>Why is context-switch time called overhead?</summary><div>While saving one PCB and loading another, the system does no useful work for any process.</div></details>
+    <details><summary>Which state does a process go to when its I/O completes?</summary><div>Ready, not running. It has to wait for the scheduler to dispatch it.</div></details>
+    <details><summary>Ordinary pipe vs named pipe?</summary><div>An ordinary pipe is unidirectional and needs a parent–child relationship. A named pipe is bidirectional, needs no relationship, and can be shared by several processes.</div></details>
+    <details><summary>Why does the circular buffer only hold BUFFER_SIZE − 1 items?</summary><div>"Full" is detected as <code>(in+1) % SIZE == out</code>. One slot must stay empty so that full can be told apart from empty (<code>in == out</code>).</div></details>
+    <details><summary>What does <code>sed 's/a/b/'</code> leave unchanged in <code>a a a</code>?</summary><div>The 2nd and 3rd <code>a</code>. Without <code>g</code>, only the first match on each line is replaced, so the output is <code>b a a</code>.</div></details>
+  </div>
+
+  <nav class="pager" aria-label="Page navigation"><a href="#m2">← Week 2</a><a href="#m4">Week 4: Threads &amp; Sync →</a></nav>
+</article>
+
+<article class="page" id="m4" data-page hidden>
+  <header class="page-head">
+    <p class="eyebrow">Week 4 · Silberschatz Ch 4 · race condition from Ch 3</p>
+    <h1>Threads &amp; Synchronization</h1>
+    <p class="lede">Threads are several flows of control inside one process. They share code, data and files, but each has its own stack, registers and program counter. That sharing is what makes them cheap, and it's also what makes them dangerous.</p>
+  </header>
+
+  <section>
+    <h2>Why threads <span class="ref">ch4·s4–7</span></h2>
+    <p>Most modern apps are multithreaded. A word processor might have one thread updating the display, one fetching data, one spell checking, and one answering the network. <strong>Process creation is heavy-weight; thread creation is light-weight.</strong> Kernels are multithreaded too.</p>
+    <div class="grid2">
+      <div class="panel"><span class="tag">Shared by all threads</span><p>Code section, data section (globals), open files, other OS resources.</p></div>
+      <div class="panel"><span class="tag">Private to each thread</span><p>Thread ID, program counter, register set, <strong>stack</strong>.</p></div>
+    </div>
+    <dl class="defs">
+      <dt>Responsiveness</dt><dd>The app keeps running if part of it blocks. This matters most for UIs.</dd>
+      <dt>Resource sharing</dt><dd>Threads share process memory automatically, which is easier than setting up shared memory or message passing.</dd>
+      <dt>Economy</dt><dd>Cheaper to create than processes, and switching threads costs less than a process context switch.</dd>
+      <dt>Scalability</dt><dd>A process can use multiple cores.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Concurrency vs parallelism <span class="ref">ch4·s8–11</span></h2>
+    <div class="fig">
+      <svg viewBox="0 0 720 190" role="img" aria-label="Concurrency: one core runs T1 T2 T3 T4 in turns. Parallelism: core 1 runs T1 and T3, core 2 runs T2 and T4 at the same time.">
+        <g style="font-size:12px;fill:var(--muted)">
+          <text x="0" y="16">CONCURRENCY · single core</text>
+          <text x="0" y="52">core</text>
+          <text x="0" y="104">PARALLELISM · two cores</text>
+          <text x="0" y="140">core 1</text>
+          <text x="0" y="176">core 2</text>
+        </g>
+        <g style="font-size:12px;font-weight:600" text-anchor="middle">
+          <rect x="70" y="32" width="75" height="30" style="fill:var(--state-ready)"/><rect x="145" y="32" width="75" height="30" style="fill:var(--state-run)"/><rect x="220" y="32" width="75" height="30" style="fill:var(--state-wait)"/><rect x="295" y="32" width="75" height="30" style="fill:var(--state-new)"/>
+          <rect x="370" y="32" width="75" height="30" style="fill:var(--state-ready)"/><rect x="445" y="32" width="75" height="30" style="fill:var(--state-run)"/><rect x="520" y="32" width="75" height="30" style="fill:var(--state-wait)"/><rect x="595" y="32" width="75" height="30" style="fill:var(--state-new)"/>
+          <rect x="70" y="120" width="150" height="30" style="fill:var(--state-ready)"/><rect x="220" y="120" width="150" height="30" style="fill:var(--state-wait)"/><rect x="370" y="120" width="150" height="30" style="fill:var(--state-ready)"/><rect x="520" y="120" width="150" height="30" style="fill:var(--state-wait)"/>
+          <rect x="70" y="156" width="150" height="30" style="fill:var(--state-run)"/><rect x="220" y="156" width="150" height="30" style="fill:var(--state-new)"/><rect x="370" y="156" width="150" height="30" style="fill:var(--state-run)"/><rect x="520" y="156" width="150" height="30" style="fill:var(--state-new)"/>
+          <g style="fill:var(--surface)">
+            <text x="107" y="52">T1</text><text x="182" y="52">T2</text><text x="257" y="52">T3</text><text x="332" y="52">T4</text><text x="407" y="52">T1</text><text x="482" y="52">T2</text><text x="557" y="52">T3</text><text x="632" y="52">T4</text>
+            <text x="145" y="140">T1</text><text x="295" y="140">T3</text><text x="445" y="140">T1</text><text x="595" y="140">T3</text>
+            <text x="145" y="176">T2</text><text x="295" y="176">T4</text><text x="445" y="176">T2</text><text x="595" y="176">T4</text>
+          </g>
+        </g>
+      </svg>
+      <p class="cap">time → · Concurrency = several tasks <em>making progress</em>. Parallelism = several tasks running <em>at the same instant</em>.</p>
+    </div>
+    <ul class="pts">
+      <li><strong>Concurrency</strong> is possible on one core, because the scheduler switches between tasks. <strong>Parallelism</strong> needs several cores. You can have concurrency without parallelism.</li>
+      <li><strong>Data parallelism</strong>: split the <em>same data</em> across cores and run the same operation on each part. <strong>Task parallelism</strong>: put <em>different operations</em> (threads) on different cores.</li>
+      <li>Multicore programming challenges: dividing activities, balance, data splitting, data dependency, testing and debugging.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Amdahl's law <span class="ref">ch4·s12–13</span></h2>
+    <div class="formula" role="img" aria-label="speedup is less than or equal to 1 divided by S plus (1 minus S) over N">
+      <span>speedup&nbsp;≤</span>
+      <span class="frac"><span>1</span><span>S + <span class="frac sm"><span>1 − S</span><span>N</span></span></span></span>
+      <span class="legend">S = serial fraction · N = cores</span>
+    </div>
+    <div class="tablewrap"><table style="min-width:360px">
+      <thead><tr><th>App 75% parallel (S = 0.25)</th><th>Calculation</th><th>Speedup</th></tr></thead>
+      <tbody class="num">
+        <tr><td>N = 1</td><td>1 / (0.25 + 0.75)</td><td>1.00×</td></tr>
+        <tr><td>N = 2</td><td>1 / (0.25 + 0.375)</td><td><strong>1.60×</strong></td></tr>
+        <tr><td>N = 4</td><td>1 / (0.25 + 0.1875)</td><td>2.29×</td></tr>
+        <tr><td>N = 8</td><td>1 / (0.25 + 0.09375)</td><td>2.91×</td></tr>
+        <tr><td>N → ∞</td><td>1 / S = 1 / 0.25</td><td><strong>4.00×</strong></td></tr>
+      </tbody>
+    </table></div>
+    <p>The serial part has a <strong>disproportionate effect</strong>: no number of cores gets you past 1/S. Practise one example with different numbers, such as S = 0.4 and N = 4 → 1 / (0.4 + 0.15) ≈ 1.82×.</p>
+  </section>
+
+  <section>
+    <h2>User threads, kernel threads &amp; models <span class="ref">ch4·s14–20</span></h2>
+    <dl class="defs">
+      <dt>User threads</dt><dd>Managed by a user-level library. Three main libraries: <strong>POSIX Pthreads</strong>, <strong>Windows threads</strong>, <strong>Java threads</strong>.</dd>
+      <dt>Kernel threads</dt><dd>Supported by the kernel itself. Windows, Linux, macOS, iOS and Android all support them.</dd>
+    </dl>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Model</th><th>Mapping</th><th>Consequence</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td>Many-to-one</td><td>Many user threads → 1 kernel thread</td><td>One blocking call <strong>blocks all</strong>. No true parallelism on multicore, because only one thread can be in the kernel at a time. Rarely used now.</td><td>Solaris Green Threads, GNU Portable Threads</td></tr>
+        <tr><td>One-to-one</td><td>Each user thread → its own kernel thread</td><td>More concurrency. Creating a user thread creates a kernel thread, so the number of threads is sometimes limited because of overhead.</td><td><strong>Windows, Linux</strong></td></tr>
+        <tr><td>Many-to-many</td><td>Many user → many (≤) kernel threads</td><td>The OS creates as many kernel threads as it needs. Not very common.</td><td>Windows ThreadFiber package</td></tr>
+        <tr><td>Two-level</td><td>Like M:M, but a user thread can also be <strong>bound</strong> to a kernel thread</td><td>Mixes both approaches.</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+  <section>
+    <h2>Thread libraries <span class="ref">ch4·s21–32</span></h2>
+    <p>A thread library gives programmers an API for creating and managing threads. It can live <strong>entirely in user space</strong> or be a <strong>kernel-level library</strong> supported by the OS.</p>
+    <div class="pair">
+      <figure class="code"><figcaption><span>pthreads.c</span><span>structure of the ch4 example</span></figcaption><pre><span class="k">#include</span> <span class="s">&lt;pthread.h&gt;</span>
+<span class="k">int</span> sum;                     <span class="c">/* shared by threads */</span>
+<span class="k">void</span> *runner(<span class="k">void</span> *param) {
+    <span class="k">int</span> upper = atoi(param);
+    sum = 0;
+    <span class="k">for</span> (<span class="k">int</span> i = 1; i &lt;= upper; i++)
+        sum += i;
+    pthread_exit(0);
+}
+<span class="k">int</span> main(<span class="k">int</span> argc, <span class="k">char</span> *argv[]) {
+    pthread_t tid;
+    pthread_attr_t attr;
+    pthread_attr_init(&amp;attr);
+    pthread_create(&amp;tid, &amp;attr, runner, argv[1]);
+    pthread_join(tid, NULL);   <span class="c">/* wait for it */</span>
+    printf(<span class="s">"sum = %d\n"</span>, sum);
+}</pre></figure>
+      <div class="flow">
+        <dl class="defs">
+          <dt>Pthreads</dt><dd>A POSIX standard (<strong>IEEE 1003.1c</strong>). It is a <strong>specification, not an implementation</strong>. Can be user-level or kernel-level. Common on UNIX, Linux and macOS.</dd>
+          <dt>Windows threads</dt><dd><code>CreateThread()</code> starts a thread, and <code>WaitForSingleObject()</code> waits for it, like join.</dd>
+          <dt>Java threads</dt><dd>Managed by the JVM, usually on top of OS threads. Create one by extending <code>Thread</code> or by implementing <code>Runnable</code> (the standard practice). <code>start()</code> runs it, <code>join()</code> waits.</dd>
+          <dt>Java Executor</dt><dd>Instead of creating threads yourself, submit tasks to an <code>Executor</code>. <code>Callable</code> + <code>Future</code> return a result.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Implicit threading <span class="ref">ch4·s33–48</span></h2>
+    <p>When there are many threads, it's hard to get explicit threading right. With implicit threading, <strong>compilers and run-time libraries</strong> create and manage the threads instead of the programmer.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Method</th><th>How it works</th><th>Remember</th></tr></thead>
+      <tbody>
+        <tr><td>Thread pools</td><td>Create threads ahead of time. They wait in a pool for work.</td><td>Faster than creating a new thread per request. The pool size <strong>bounds</strong> the number of threads. Separating the task from how it runs allows other strategies, such as periodic tasks. Java: <code>newSingleThreadExecutor</code>, <code>newFixedThreadPool</code>, <code>newCachedThreadPool</code>.</td></tr>
+        <tr><td>Fork-join</td><td>Split the task into subtasks (fork), then combine the results (join). Recursive divide and conquer.</td><td>Java: <code>ForkJoinTask</code>. <code>RecursiveTask</code> <strong>returns</strong> a result from <code>compute()</code>. <code>RecursiveAction</code> returns nothing.</td></tr>
+        <tr><td>OpenMP</td><td>Compiler directives + API for C, C++, FORTRAN in shared-memory systems.</td><td><code>#pragma omp parallel</code> creates as many threads as there are cores. <code>#pragma omp parallel for</code> splits a loop.</td></tr>
+        <tr><td>Grand Central Dispatch</td><td>Apple (macOS/iOS). Blocks <code>^{ }</code> or Swift closures go into dispatch queues.</td><td><strong>Serial</strong> queue: FIFO, one at a time (main queue). <strong>Concurrent</strong> queue: FIFO, several at once. Four QoS classes: user-interactive, user-initiated, utility, background.</td></tr>
+        <tr><td>Intel TBB</td><td>C++ template library.</td><td><code>parallel_for</code> replaces a serial for loop.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Threading issues <span class="ref">ch4·s49–57</span></h2>
+    <dl class="defs">
+      <dt><code>fork()</code> &amp; <code>exec()</code></dt><dd>Does fork duplicate only the calling thread or all threads? Some UNIXes have both versions. <code>exec()</code> replaces the whole process, including all threads. If you call exec right after fork, copying only the calling thread is enough.</dd>
+      <dt>Signal handling</dt><dd>A signal is generated by an event, delivered to a process, and handled by the <strong>default</strong> handler or a <strong>user-defined</strong> one that overrides it. In a multithreaded process it can go to: the thread it applies to, every thread, certain threads, or one designated thread that receives all signals.</dd>
+      <dt>Thread cancellation</dt><dd>Ends a <strong>target thread</strong> before it finishes. <strong>Asynchronous</strong>: terminate immediately. <strong>Deferred</strong> (the <strong>default</strong>): the thread checks periodically and only stops at a <strong>cancellation point</strong> such as <code>pthread_testcancel()</code>, then runs cleanup handlers. If cancellation is disabled, the request stays pending. Linux implements it with signals. Java uses <code>interrupt()</code>.</dd>
+      <dt>Thread-local storage</dt><dd>Each thread gets <strong>its own copy</strong> of data. Useful when you don't control thread creation, such as in a thread pool. Unlike local variables, TLS is visible <strong>across function calls</strong>. It's like static data, but unique per thread.</dd>
+      <dt>Scheduler activations</dt><dd>M:M and two-level models use a <strong>lightweight process (LWP)</strong> as a virtual processor between user and kernel threads. Each LWP is attached to a kernel thread. The kernel informs the thread library through <strong>upcalls</strong>, so the app keeps the right number of kernel threads.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>OS examples <span class="ref">ch4·s58–62</span></h2>
+    <div class="grid2">
+      <div class="panel"><span class="tag">Windows · one-to-one</span><p>Each thread has an ID, register set, separate <strong>user and kernel stacks</strong>, and private storage. Together these are the thread's <strong>context</strong>.</p>
+        <ul class="pts"><li><strong>ETHREAD</strong>: executive thread block, points to its process and KTHREAD. Kernel space.</li><li><strong>KTHREAD</strong>: scheduling and sync info, kernel stack, points to TEB. Kernel space.</li><li><strong>TEB</strong>: thread environment block with thread ID, user stack and TLS. <strong>User space</strong>.</li></ul></div>
+      <div class="panel"><span class="tag">Linux · tasks</span><p>Linux calls them <strong>tasks</strong>, not threads. It creates them with <code>clone()</code>. <strong>Flags</strong> decide what the child shares with the parent (address space, files, signal handlers). <code>struct task_struct</code> points to process data that is either shared or unique.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Synchronization: the race condition <span class="ref">ch3·s36–40</span></h2>
+    <p>Go back to the producer–consumer buffer and add a shared <code>counter</code> so every slot can be used. The producer does <code>counter++</code> and the consumer does <code>counter--</code>. Each statement looks atomic, but in machine code it is three steps:</p>
+    <div class="pair">
+      <figure class="code"><figcaption><span>counter++</span></figcaption><pre>register1 = counter
+register1 = register1 + 1
+counter   = register1</pre></figure>
+      <figure class="code"><figcaption><span>counter--</span></figcaption><pre>register2 = counter
+register2 = register2 - 1
+counter   = register2</pre></figure>
+    </div>
+    <div class="tablewrap"><table class="race" style="min-width:460px">
+      <thead><tr><th>Step</th><th>Who</th><th>Executes</th><th>Result</th></tr></thead>
+      <tbody class="num">
+        <tr><td>S0</td><td>producer</td><td><code>register1 = counter</code></td><td>register1 = 5</td></tr>
+        <tr><td>S1</td><td>producer</td><td><code>register1 = register1 + 1</code></td><td>register1 = 6</td></tr>
+        <tr><td>S2</td><td>consumer</td><td><code>register2 = counter</code></td><td>register2 = 5</td></tr>
+        <tr><td>S3</td><td>consumer</td><td><code>register2 = register2 − 1</code></td><td>register2 = 4</td></tr>
+        <tr><td>S4</td><td>producer</td><td><code>counter = register1</code></td><td>counter = 6</td></tr>
+        <tr class="bad"><td>S5</td><td>consumer</td><td><code>counter = register2</code></td><td>counter = <strong>4</strong> ✗ (should be 5)</td></tr>
+      </tbody>
+    </table></div>
+    <p>A <strong>race condition</strong> happens when several processes or threads access and change shared data concurrently, and the result depends on the <strong>order</strong> in which they run. The fix is to make sure only one of them runs the code that touches <code>counter</code> at a time. This protected region is the <strong>critical section</strong>, guarded by tools like mutex locks and semaphores.</p>
+    <div class="trap">
+      <b>Slide question · ch3·s40</b>
+      <p>Why is there no race in the first version, which fills at most N − 1 slots? Because it shares <strong>no variable that both sides write</strong>. The producer only writes <code>in</code>, the consumer only writes <code>out</code>, and each just reads the other's. A race needs at least two writers to the same data.</p>
+    </div>
+  </section>
+
+  <div class="recall">
+    <h3>Check yourself · week 4</h3>
+    <details><summary>What does a thread share with other threads in its process, and what does it keep private?</summary><div>Shared: code, data (globals), open files and other resources. Private: thread ID, program counter, registers, stack.</div></details>
+    <details><summary>Can you have concurrency without parallelism?</summary><div>Yes. On a single core the scheduler switches between tasks, so they all make progress, but only one runs at any instant.</div></details>
+    <details><summary>An app is 60% parallel. What is its speedup on 2 cores, and the maximum on unlimited cores?</summary><div>S = 0.4. On 2 cores: 1 / (0.4 + 0.3) = 1.43×. Maximum: 1 / 0.4 = 2.5×.</div></details>
+    <details><summary>Why can't many-to-one threads run in parallel on a multicore machine?</summary><div>All user threads map to one kernel thread, and only one thread can be in the kernel at a time. If one thread makes a blocking call, all of them block.</div></details>
+    <details><summary>Which threading model do Windows and Linux use?</summary><div>One-to-one.</div></details>
+    <details><summary>Asynchronous vs deferred cancellation: which is the default, and why is it safer?</summary><div>Deferred is the default. The thread stops only at a cancellation point, so it can clean up and never leaves shared data half-updated.</div></details>
+    <details><summary>How is thread-local storage different from a local variable?</summary><div>A local variable exists only during one function call. TLS stays visible across function calls, but each thread has its own copy.</div></details>
+    <details><summary>Using the S0–S5 interleaving, what other wrong value could counter end up with?</summary><div>6, if the consumer's write (S5) happens before the producer's write (S4). The correct value is 5.</div></details>
+  </div>
+
+  <nav class="pager" aria-label="Page navigation"><a href="#m3">← Week 3</a><a href="#recall">Night-before sheet →</a></nav>
+</article>
+
+<article class="page" id="recall" data-page hidden>
+  <header class="page-head">
+    <p class="eyebrow">Night-before sheet · all four weeks</p>
+    <h1>If you only read one page</h1>
+    <p class="lede">The facts most likely to be tested, each cut to one line. For anything that doesn't click, go back to that week's page.</p>
+  </header>
+
+  <div class="sheet">
+    <section class="sheet-col">
+      <h2>W1 · Intro &amp; structure</h2>
+      <dl class="defs tight">
+        <dt>OS</dt><dd>Intermediary between user and hardware. It is a resource allocator and a control program.</dd>
+        <dt>Kernel</dt><dd>The one program running at all times.</dd>
+        <dt>Interrupt vector</dt><dd>Table of service-routine addresses.</dd>
+        <dt>Trap</dt><dd>Software interrupt: an error or a system call.</dd>
+        <dt>Mode bit</dt><dd>0 = kernel, 1 = user. Privileged instructions only run in kernel mode.</dd>
+        <dt>Timer</dt><dd>Stops a process hogging the CPU. Setting it is privileged.</dd>
+        <dt>DMA</dt><dd>One interrupt per block, not per byte.</dd>
+        <dt>Syscall params</dt><dd>Registers · block (Linux) · stack.</dd>
+        <dt>Policy / mechanism</dt><dd>What to do / how to do it.</dd>
+        <dt>Microkernel</dt><dd>Services in user space and message passing. Safer but slower (Mach).</dd>
+        <dt>Hybrid</dt><dd>Linux, Windows, macOS.</dd>
+        <dt>Boot</dt><dd>BIOS/UEFI → bootloader (GRUB) → kernel.</dd>
+      </dl>
+    </section>
+    <section class="sheet-col">
+      <h2>W2 · VMs &amp; shell</h2>
+      <dl class="defs tight">
+        <dt>Type 0</dt><dd>Firmware, dedicated hardware (LPAR).</dd>
+        <dt>Type 1</dt><dd>Bare metal (ESX, Xen, Hyper-V, KVM).</dd>
+        <dt>Type 2</dt><dd>App on a host OS (VirtualBox).</dd>
+        <dt>Paravirt</dt><dd>Modified guest, hypercalls.</dd>
+        <dt>Containment</dt><dd>One kernel, not a VM (zones, jails).</dd>
+        <dt>Trap-and-emulate</dt><dd>Guest kernel in user mode. Privileged instruction → trap → VMM performs it.</dd>
+        <dt>Binary translation</dt><dd>For non-trapping x86 instructions like <code>popf</code>. Translations are cached.</dd>
+        <dt>VT-x / AMD-V</dt><dd>Host and guest CPU modes in hardware.</dd>
+        <dt>Bash</dt><dd><code>#!/bin/bash</code> · <code>chmod +x</code> · <code>x="v"</code> with no spaces · <code>[ $a -eq $b ]</code></dd>
+        <dt>Bash vars</dt><dd><code>$0</code> name · <code>$1</code> arg · <code>$#</code> count · <code>$@</code> all · <code>$?</code> status</dd>
+        <dt>GCC</dt><dd>Preprocess → compile → assemble → link.</dd>
+      </dl>
+    </section>
+    <section class="sheet-col">
+      <h2>W3 · Processes &amp; C</h2>
+      <dl class="defs tight">
+        <dt>Memory</dt><dd>Text · data · heap ↑ · stack ↓</dd>
+        <dt>States</dt><dd>New → ready ⇄ running → terminated. Running → waiting → <strong>ready</strong>.</dd>
+        <dt>PCB</dt><dd>State, PC, registers, scheduling, memory, accounting, I/O. In Linux: <code>task_struct</code>.</dd>
+        <dt>Context switch</dt><dd>Save and load PCBs. Pure overhead.</dd>
+        <dt><code>fork()</code></dt><dd>0 = child · &gt;0 = parent · −1 = error. <em>n</em> forks → 2ⁿ processes.</dd>
+        <dt>Zombie / orphan</dt><dd>No <code>wait()</code> yet / parent died first.</dd>
+        <dt>IPC</dt><dd>Shared memory (fast, user-managed) vs message passing.</dd>
+        <dt>Blocking</dt><dd>Synchronous. Both blocking = rendezvous.</dd>
+        <dt>Pipes</dt><dd>Ordinary: one-way, parent–child. Named: two-way, any processes.</dd>
+        <dt>Socket</dt><dd>IP:port. Ports &lt;1024 well-known. 127.0.0.1 = loopback.</dd>
+        <dt>Pointer</dt><dd><code>&amp;x</code> address · <code>*p</code> value · <code>a[i] == *(a+i)</code></dd>
+        <dt>Text tools</dt><dd>grep finds · sed <code>s/a/b/g</code> edits · awk <code>$1 NF NR END</code></dd>
+      </dl>
+    </section>
+    <section class="sheet-col">
+      <h2>W4 · Threads &amp; sync</h2>
+      <dl class="defs tight">
+        <dt>Thread owns</dt><dd>ID, PC, registers, stack. Shares code, data and files.</dd>
+        <dt>Benefits</dt><dd>Responsiveness · resource sharing · economy · scalability.</dd>
+        <dt>Concurrency</dt><dd>Progress (works on 1 core). Parallelism = at the same instant (needs multiple cores).</dd>
+        <dt>Data / task</dt><dd>Same operation on split data / different operations per core.</dd>
+        <dt>Amdahl</dt><dd><code>1 / (S + (1−S)/N)</code>. The limit is 1/S.</dd>
+        <dt>Many-to-one</dt><dd>One block blocks all. No parallelism.</dd>
+        <dt>One-to-one</dt><dd>Windows, Linux.</dd>
+        <dt>Pthreads</dt><dd>IEEE 1003.1c, a specification. <code>pthread_create</code> / <code>pthread_join</code>.</dd>
+        <dt>Implicit</dt><dd>Thread pool · fork-join · OpenMP · GCD · TBB.</dd>
+        <dt>Cancellation</dt><dd>Async (immediate) vs deferred (default, at a cancellation point).</dd>
+        <dt>TLS</dt><dd>Per-thread data that lasts across function calls.</dd>
+        <dt>Linux</dt><dd>"Tasks", created with <code>clone()</code> + flags.</dd>
+        <dt>Race condition</dt><dd>Result depends on execution order. <code>counter++</code> is 3 steps.</dd>
+      </dl>
+    </section>
+  </div>
+
+  <nav class="pager" aria-label="Page navigation"><a href="#m4">← Week 4</a><a href="#start">Back to start</a></nav>
+</article>
+  </main>
+</div>
+
+<script>
+(function(){
+  var pages = Array.prototype.slice.call(document.querySelectorAll('[data-page]'));
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  function show(){
+    var id = (location.hash || '#start').slice(1);
+    var target = document.getElementById(id);
+    if (!target || !target.hasAttribute('data-page')) { target = pages[0]; id = target.id; }
+    pages.forEach(function(p){ p.hidden = p !== target; });
+    links.forEach(function(a){
+      if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current','page');
+      else a.removeAttribute('aria-current');
+    });
+    var cur = document.querySelector('.nav a[aria-current="page"]');
+    if (cur && cur.scrollIntoView && window.matchMedia('(max-width:880px)').matches) {
+      cur.scrollIntoView({block:'nearest', inline:'center'});
+    }
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', show);
+  show();
+})();
+</script>

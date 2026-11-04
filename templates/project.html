@@ -52,9 +52,11 @@
 
 <script>
     // 1. Konfigurasi Endpoint & Hak Akses
-    const BASE_PROJECTS_ENDPOINT = "{% url 'main:get_projects_json' %}";
-    const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}"; // AJAX Tambah Project
+    const BASE_PROJECTS_ENDPOINT = "{% url 'api:project-list' %}";
+    const DETAIL_PROJECT_ENDPOINT = "{% url 'api:project-detail' '00000000-0000-0000-0000-000000000000' %}";
+    const STAR_PROJECT_ENDPOINT = "{% url 'api:project-star' '00000000-0000-0000-0000-000000000000' %}";
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+    const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === "true"; // [BARU DRF]
     const HAS_CHANGE_PERM = "{{ perms.main.change_project|yesno:'true,false' }}" === "true";
     let projectsAbortController;
 
@@ -108,9 +110,8 @@
     }
 
     // 5. Fungsi Merakit Card HTML (Sesuai dengan CSS-mu)
-    function buildProjectCardElement(item) {
-        const project = item.fields;
-        const projectId = item.pk;
+    function buildProjectCardElement(project) {
+        const projectId = project.id;
         
         const cardElement = document.createElement('div');
         cardElement.className = 'proj-card';
@@ -128,18 +129,22 @@
             ? `<a href="${editUrl}" class="edit-project-btn">Edit</a>`
             : '';
 
-        const deleteUrl = "{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', projectId);
+        // [DIUBAH DRF] Tombol Hapus memakai atribut data-action="delete" (tanpa <form> reload)
         const deleteHtml = IS_SUPERUSER
-            ? `<form method="post" action="${deleteUrl}" style="display:inline;">
-                 {% csrf_token %}
-                 <button type="submit" class="delete-proj-btn" onclick="return confirm('Yakin ingin menghapus project ini?');">Hapus</button>
-               </form>`
+            ? `<button type="button" class="delete-proj-btn" data-action="delete" data-id="${escapeHtml(projectId)}">Hapus</button>`
             : '';
 
-        const starUrl = "{% url 'main:toggle_star' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', projectId);
+        // [DIUBAH DRF] Tombol Star memakai atribut data-action="star" jika login, atau mengarah ke halaman login jika belum
         const isStarredClass = project.is_starred ? " is-starred" : "";
         const starText = project.is_starred ? "Unstar" : "Star";
         const starTitle = project.star_count > 0 ? `Dibintangi oleh ${escapeHtml(project.starred_by_names)}` : "Jadilah yang pertama memberi star";
+        const starHtml = IS_AUTHENTICATED
+            ? `<button type="button" class="button-star${isStarredClass}" data-action="star" data-id="${escapeHtml(projectId)}" title="${starTitle}">
+                   <span aria-hidden="true">★</span> ${starText} <span class="star-count">${project.star_count}</span>
+               </button>`
+            : `<a href="{% url 'main:login' %}" class="button-star" style="text-decoration:none;" title="${starTitle}">
+                   <span aria-hidden="true">★</span> Login untuk Star <span class="star-count">${project.star_count}</span>
+               </a>`;
 
         const completeCardHtml = `
             <div class="proj-image-container">
@@ -152,12 +157,7 @@
                         <h3 class="proj-title">${escapeHtml(project.nama)}</h3>
                         <span class="proj-type-pill">${escapeHtml(project.tipe_display)}</span>
                     </div>
-                    <form method="post" action="${starUrl}" class="star-form">
-                        {% csrf_token %}
-                        <button type="submit" class="button-star${isStarredClass}" title="${starTitle}">
-                            <span aria-hidden="true">★</span> ${starText} <span class="star-count">${project.star_count}</span>
-                        </button>
-                    </form>
+                    ${starHtml}
                 </div>
                 
                 <p class="proj-desc">${escapeHtml(project.deskripsi)}</p>
@@ -212,6 +212,29 @@
         }
     }
 
+    // Membaca format error validasi dari serializer DRF
+    function apiErrorMessage(data, status) {
+        const messages = Object.values(data).flat().filter(value => typeof value === 'string');
+        return messages.join(' ') || `Terjadi kesalahan (status ${status}).`;
+    }
+
+    // Fungsi terpadu untuk mengirim request POST / PATCH / DELETE berformat JSON ke DRF
+    async function writeProject(url, method, payload) {
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: payload === undefined ? undefined : JSON.stringify(payload),
+        });
+        if (response.status === 204) return null;
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(apiErrorMessage(data, response.status));
+        return data;
+    }
+
     // 7. Pengiriman Form Tambah Project dengan AJAX
     async function addProject(event) {
         event.preventDefault(); // Cegah reload halaman
@@ -219,30 +242,20 @@
         submitButton.disabled = true; // Nonaktifkan tombol agar tidak double-submit
 
         try {
-            const response = await fetch(CREATE_PROJECT_ENDPOINT, {
-                method: 'POST',
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },
-                body: new FormData(projectForm),
-            });
-            
-            const result = await response.json().catch(() => ({}));
-            
-            if (response.ok) {
-                projectForm.reset();
-                closeProjectModal();
-                showToast('Berhasil', 'Project baru berhasil ditambahkan!', 'success');
-                // Refresh daftar project otomatis sesuai dengan kata kunci di pencarian
-                fetchProjects(searchInput.value.trim());
-            } else {
-                // Menyatukan seluruh pesan error dari validasi backend form
-                const errorMessages = result.errors 
-                    ? Object.values(result.errors).flat().map(error => error.message) 
-                    : [result.message || `Terjadi kesalahan (status ${response.status}).`];
-                showToast('Gagal menambahkan project', errorMessages.join(' '), 'error');
-            }
+            const fields = new FormData(projectForm);
+            const payload = Object.fromEntries([
+                'nama', 'tipe', 'deskripsi', 'thumbnail', 'link', 'skillset',
+            ].map(name => [name, fields.get(name)]));
+
+            await writeProject(BASE_PROJECTS_ENDPOINT, 'POST', payload);
+            projectForm.reset();
+            closeProjectModal();
+            showToast('Berhasil', 'Project baru berhasil ditambahkan!', 'success');
+            // Refresh daftar project otomatis sesuai dengan kata kunci di pencarian
+            await fetchProjects(searchInput.value.trim());
         } catch (error) {
             console.error('Error adding project:', error);
-            showToast('Gagal', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+            showToast('Gagal menambahkan project', error.message, 'error');
         } finally {
             submitButton.disabled = false; // Aktifkan tombol kembali
         }
@@ -252,6 +265,30 @@
     if (projectForm) {
         projectForm.addEventListener('submit', addProject);
     }
+
+    // Event Delegation untuk menangani klik tombol Star (POST) dan Hapus (DELETE) via AJAX
+    gridContainer.addEventListener('click', async function(event) {
+        const button = event.target.closest('button[data-action]');
+        if (!button || button.disabled) return;
+
+        const action = button.dataset.action;
+        if (action === 'delete' && !window.confirm('Yakin ingin menghapus project ini?')) return;
+
+        button.disabled = true;
+        try {
+            const pattern = action === 'star' ? STAR_PROJECT_ENDPOINT : DETAIL_PROJECT_ENDPOINT;
+            await writeProject(
+                projectEndpoint(pattern, button.dataset.id),
+                action === 'star' ? 'POST' : 'DELETE'
+            );
+            showToast('Berhasil', action === 'star' ? 'Status star diperbarui.' : 'Project berhasil dihapus.', 'success');
+            await fetchProjects(searchInput.value.trim());
+        } catch (error) {
+            showToast('Gagal', error.message, 'error');
+        } finally {
+            button.disabled = false;
+        }
+    });
 
     // 8. Search Debouncing
     const SEARCH_DEBOUNCE_DELAY = 300;

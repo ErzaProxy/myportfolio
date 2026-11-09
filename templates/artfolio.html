@@ -36,10 +36,14 @@
     {% endif %}
 </div>
 
+{% csrf_token %}
+
 <script>
-    const BASE_ARTS_ENDPOINT = "{% url 'main:get_arts_json' %}";
-    const CREATE_ART_ENDPOINT = "{% url 'main:create_art_ajax' %}";
+    const BASE_ARTS_ENDPOINT = "{% url 'api:art-list' %}";
+    const DETAIL_ART_ENDPOINT = "{% url 'api:art-detail' '00000000-0000-0000-0000-000000000000' %}";
+    const LOVE_ART_ENDPOINT = "{% url 'api:art-love' '00000000-0000-0000-0000-000000000000' %}";
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+    const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === "true"; // [BARU DRF]
     const HAS_CHANGE_PERM = "{{ perms.main.change_art|yesno:'true,false' }}" === "true";
     let artsAbortController;
 
@@ -53,6 +57,11 @@
 
     function escapeHtml(value) {
         return String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+    }
+
+    //Fungsi pembantu untuk mengganti dummy UUID dengan ID art asli
+    function artEndpoint(pattern, id) {
+        return pattern.replace('00000000-0000-0000-0000-000000000000', id);
     }
 
     function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
@@ -82,9 +91,8 @@
         return cookieValue;
     }
 
-    function buildArtCardElement(item) {
-        const art = item.fields;
-        const artId = item.pk;
+    function buildArtCardElement(art) {
+        const artId = art.id;
         const cardElement = document.createElement('div');
         cardElement.className = 'art-card';
 
@@ -92,18 +100,18 @@
         
         const editUrl = "{% url 'main:edit_art' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', artId);
         const editHtml = HAS_CHANGE_PERM ? `<a href="${editUrl}" class="edit-art-btn">Edit</a>` : '';
-
-        const deleteUrl = "{% url 'main:delete_art' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', artId);
         const deleteHtml = IS_SUPERUSER ? 
-            `<form method="post" action="${deleteUrl}" style="display:inline; width: 100%;">
-                 {% csrf_token %}
-                 <button type="submit" class="delete-art-btn" style="width: 100%;" onclick="return confirm('Yakin ingin menghapus karya ini?');">Hapus</button>
-             </form>` : '';
-
-        const loveUrl = "{% url 'main:toggle_love' '00000000-0000-0000-0000-000000000000' %}".replace('00000000-0000-0000-0000-000000000000', artId);
+            `<button type="button" class="delete-art-btn" style="width: 100%;" data-action="delete" data-id="${escapeHtml(artId)}">Hapus</button>` : '';
         const isLovedClass = art.is_loved ? " is-loved" : "";
         const loveText = art.is_loved ? "Unlove" : "Love";
         const loveTitle = art.love_count > 0 ? `Disukai oleh ${escapeHtml(art.loved_by_names)}` : "Jadilah yang pertama menyukai karya ini";
+        const loveHtml = IS_AUTHENTICATED
+            ? `<button type="button" class="button-love${isLovedClass}" data-action="love" data-id="${escapeHtml(artId)}" title="${loveTitle}">
+                   <span aria-hidden="true">❤</span> ${loveText} <span class="love-count">${art.love_count}</span>
+               </button>`
+            : `<a href="{% url 'main:login' %}" class="button-love" style="text-decoration:none;" title="${loveTitle}">
+                   <span aria-hidden="true">❤</span> Login <span class="love-count">${art.love_count}</span>
+               </a>`;
 
         const completeCardHtml = `
             <div class="art-image-container">
@@ -116,12 +124,7 @@
                     <div class="art-title-group">
                         <h3 class="art-title" style="margin: 0;">${escapeHtml(art.nama)}</h3>
                     </div>
-                    <form method="post" action="${loveUrl}" class="love-form">
-                        {% csrf_token %}
-                        <button type="submit" class="button-love${isLovedClass}" title="${loveTitle}">
-                            <span aria-hidden="true">❤</span> ${loveText} <span class="love-count">${art.love_count}</span>
-                        </button>
-                    </form>
+                    ${loveHtml}
                 </div>
 
                 <p class="art-desc">${escapeHtml(art.deskripsi)}</p>
@@ -164,39 +167,75 @@
         }
     }
 
+    function apiErrorMessage(data, status) {
+        const messages = Object.values(data).flat().filter(value => typeof value === 'string');
+        return messages.join(' ') || `Terjadi kesalahan (status ${status}).`;
+    }
+
+    async function writeArt(url, method, payload) {
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: payload === undefined ? undefined : JSON.stringify(payload),
+        });
+        if (response.status === 204) return null;
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(apiErrorMessage(data, response.status));
+        return data;
+    }
+
     async function addArt(event) {
         event.preventDefault();
         const submitButton = artForm.querySelector('button[type="submit"]');
         submitButton.disabled = true;
 
         try {
-            const response = await fetch(CREATE_ART_ENDPOINT, {
-                method: 'POST',
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },
-                body: new FormData(artForm),
-            });
-            const result = await response.json().catch(() => ({}));
-            
-            if (response.ok) {
-                artForm.reset();
-                closeArtModal();
-                showToast('Berhasil', 'Karya baru berhasil ditambahkan!', 'success');
-                fetchArts(searchInput.value.trim());
-            } else {
-                const errorMessages = result.errors 
-                    ? Object.values(result.errors).flat().map(error => error.message) 
-                    : [result.message || `Terjadi kesalahan (status ${response.status}).`];
-                showToast('Gagal menambahkan karya', errorMessages.join(' '), 'error');
-            }
+            const fields = new FormData(artForm);
+            const payload = Object.fromEntries([
+                'nama', 'deskripsi', 'url',
+            ].map(name => [name, fields.get(name)]));
+
+            await writeArt(BASE_ARTS_ENDPOINT, 'POST', payload);
+            artForm.reset();
+            closeArtModal();
+            showToast('Berhasil', 'Karya baru berhasil ditambahkan!', 'success');
+            await fetchArts(searchInput.value.trim());
         } catch (error) {
             console.error('Error adding art:', error);
-            showToast('Gagal', 'Tidak dapat terhubung ke server.', 'error');
+            showToast('Gagal menambahkan karya', error.message, 'error');
         } finally {
             submitButton.disabled = false;
         }
     }
 
     if (artForm) artForm.addEventListener('submit', addArt);
+
+    gridContainer.addEventListener('click', async function(event) {
+        const button = event.target.closest('button[data-action]');
+        if (!button || button.disabled) return;
+
+        const action = button.dataset.action;
+        if (action === 'delete' && !window.confirm('Yakin ingin menghapus karya ini?')) return;
+
+        button.disabled = true;
+        try {
+            const pattern = action === 'love' ? LOVE_ART_ENDPOINT : DETAIL_ART_ENDPOINT;
+            await writeArt(
+                artEndpoint(pattern, button.dataset.id),
+                action === 'love' ? 'POST' : 'DELETE'
+            );
+            showToast('Berhasil', action === 'love' ? 'Status love diperbarui.' : 'Karya berhasil dihapus.', 'success');
+            await fetchArts(searchInput.value.trim());
+        } catch (error) {
+            showToast('Gagal', error.message, 'error');
+        } finally {
+            button.disabled = false;
+        }
+    });
 
     const SEARCH_DEBOUNCE_DELAY = 300;
     let searchDebounceTimer;

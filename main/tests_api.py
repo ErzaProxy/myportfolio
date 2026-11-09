@@ -188,3 +188,81 @@ class ProjectAPITest(APITestCase):
             HTTP_X_CSRFTOKEN=token,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+class ArtAPITest(APITestCase):
+    def setUp(self):
+        self.owner = User.objects.create_superuser(
+            username="owner", password="test-password", email="owner@example.com"
+        )
+        self.visitor = User.objects.create_user(
+            username="visitor", password="test-password"
+        )
+        self.art = Art.objects.create(
+            nama="Lukisan Awal",
+            deskripsi="Karya orisinal",
+            url="https://example.com/art.png",
+        )
+        self.list_url = reverse("api:art-list")
+        self.detail_url = reverse("api:art-detail", args=[self.art.id])
+        self.love_url = reverse("api:art-love", args=[self.art.id])
+        self.payload = {
+            "nama": "Karya Baru",
+            "deskripsi": "Karya tambahan",
+            "url": "https://example.com/new.png",
+        }
+
+    def test_public_list_and_detail(self):
+        response = self.client.get(self.list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]["id"], str(self.art.id))
+        self.assertFalse(response.data[0]["is_loved"])
+        self.assertEqual(
+            self.client.get(self.detail_url).status_code, status.HTTP_200_OK
+        )
+
+    def test_guest_and_visitor_cannot_write(self):
+        for user in (None, self.visitor):
+            self.client.force_authenticate(user=user)
+            self.assertEqual(
+                self.client.post(self.list_url, self.payload, format="json").status_code,
+                status.HTTP_403_FORBIDDEN,
+            )
+
+    def test_owner_can_create(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post(self.list_url, self.payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_love_requires_login_and_toggles(self):
+        self.assertEqual(
+            self.client.post(self.love_url).status_code, status.HTTP_403_FORBIDDEN
+        )
+        self.client.force_authenticate(user=self.visitor)
+        response = self.client.post(self.love_url)
+        self.assertTrue(response.data["is_loved"])
+        self.assertEqual(response.data["love_count"], 1)
+
+        response = self.client.post(self.love_url)
+        self.assertFalse(response.data["is_loved"])
+        self.assertEqual(response.data["love_count"], 0)
+
+    def test_editor_can_patch_art_but_cannot_create_or_delete(self):
+        editor_group, _ = Group.objects.get_or_create(name="Editor")
+        self.visitor.groups.add(editor_group)
+        self.client.force_authenticate(user=self.visitor)
+
+        # Editor diizinkan melakukan PATCH
+        patch_resp = self.client.patch(
+            self.detail_url, {"nama": "Lukisan Malam"}, format="json"
+        )
+        self.assertEqual(patch_resp.status_code, status.HTTP_200_OK)
+        self.art.refresh_from_db()
+        self.assertEqual(self.art.nama, "Lukisan Malam")
+
+        # Editor ditolak melakukan POST (Create)
+        post_resp = self.client.post(self.list_url, self.payload, format="json")
+        self.assertEqual(post_resp.status_code, status.HTTP_403_FORBIDDEN)
+
+        # Editor ditolak melakukan DELETE
+        del_resp = self.client.delete(self.detail_url)
+        self.assertEqual(del_resp.status_code, status.HTTP_403_FORBIDDEN)

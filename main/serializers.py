@@ -1,6 +1,6 @@
 from django.utils.html import strip_tags
 from rest_framework import serializers
-from main.models import Project
+from main.models import Project, Art
 
 class ProjectSerializer(serializers.ModelSerializer):
     tipe_display = serializers.CharField(source="get_tipe_display", read_only=True)
@@ -61,4 +61,45 @@ class ProjectSerializer(serializers.ModelSerializer):
     def get_starred_by_names(self, obj):
         return ", ".join(user.username for user in obj.starred_by.all())
     
+class ArtSerializer(serializers.ModelSerializer):
+    love_count = serializers.SerializerMethodField()
+    is_loved = serializers.SerializerMethodField()
+    loved_by_names = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Art
+        fields = [
+            "id",
+            "nama",
+            "deskripsi",
+            "url",
+            "love_count",
+            "is_loved",
+            "loved_by_names",
+        ]
+        read_only_fields = ["id"]
+
+    def validate_nama(self, value):
+        value = strip_tags(value).strip()
+        if not value:
+            raise serializers.ValidationError("Judul karya tidak boleh kosong.")
+        return value
+
+    def validate_deskripsi(self, value):
+        value = strip_tags(value).strip()
+        if not value:
+            raise serializers.ValidationError("Deskripsi tidak boleh kosong.")
+        return value
+
+    def get_love_count(self, obj):
+        return obj.loved_by.count()
+
+    def get_is_loved(self, obj):
+        request = self.context.get("request")
+        if request is None or not request.user.is_authenticated:
+            return False
+        return request.user in obj.loved_by.all()
+
+    def get_loved_by_names(self, obj):
+        return ", ".join(user.username for user in obj.loved_by.all())
     
